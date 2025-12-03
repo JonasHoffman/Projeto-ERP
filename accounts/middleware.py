@@ -29,16 +29,7 @@ class ViewPermissionMiddleware:
         if request.path in PUBLIC_URLS:
             return self.get_response(request)
 
-        # Ignorar rotas do painel de permissões
-        if request.path.startswith("/accounts/carregar_views/"):
-            return self.get_response(request)
-
-        if request.path.startswith("/accounts/gerenciar_permissoes/"):
-            return self.get_response(request)
-
-        if request.path.startswith("/accounts/salvar_permissao/"):
-            return self.get_response(request)
-
+        
         # Se não estiver logado, libera (deixa o Django redirecionar)
         if not request.user.is_authenticated:
             return self.get_response(request)

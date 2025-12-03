@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+{% include "templates/head.html" %}
+</head>
+<body>
+    <div class="content">
+        <div class="content-all">
+            <div class="nav-content">
+                <img src="" alt="nada">
+                {% include "templates/nav.html" %}
+            </div>
+            <div class="content-content">
+                <div class="content-header">
+                    {% include "templates/nav_top.html" %}
+                    <H2>HEADER</H2>
+
+                </div>
+                <div class="content-footer-header">
+                    {% block content %}{% endblock content %}
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+
+        
+    </div>
+    
+</body>
+</html>
+
