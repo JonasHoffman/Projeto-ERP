@@ -12,3 +12,10 @@ class SubMenuItem(models.Model):
     nome = models.CharField(max_length=100)
     url = models.CharField(max_length=255)
     view_id = models.IntegerField()
+
+class NavTop(models.Model):
+    nome = models.CharField(max_length=100)
+    url = models.CharField(max_length=200)
+
+    def __str__(self):
+        return f"{self.nome}"

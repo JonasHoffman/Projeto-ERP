@@ -1,13 +1,12 @@
 from interface.models import MenuItem, NavTop
 from accounts.models import PermissaoView
-from django.contrib.auth.models import Group
 
 def menu_items(request):
 
     user = request.user
-    menus = MenuItem.objects.prefetch_related('subitens').all()
+    menus = MenuItem.objects.prefetch_related('subitens__view').all()
 
-    # Não filtra se o usuário não estiver logado (ex.: página de login)
+    # Usuário não logado → não mostra nada
     if not user.is_authenticated:
         for menu in menus:
             menu.subitens_permitidos = []
@@ -16,20 +15,33 @@ def menu_items(request):
     # Permissões por usuário
     permissoes_user = PermissaoView.objects.filter(
         usuario=user,
-        permitido=True
+        pode_acessar=True
     ).values_list("view_id", flat=True)
 
-    # Permissões por grupo
+    # Permissões pelos grupos do usuário
     permissoes_grupos = PermissaoView.objects.filter(
         grupo__in=user.groups.all(),
-        permitido=True
+        pode_acessar=True
     ).values_list("view_id", flat=True)
 
-    permissoes_ids = set(list(permissoes_user) + list(permissoes_grupos))
+    # Junta todos os IDs de view permitidos
+    permissoes_ids = set(permissoes_user) | set(permissoes_grupos)
 
-    # Adiciona a lista filtrada em cada menu
+    # Filtra submenus
     for menu in menus:
-        menu.subitens_permitidos = menu.subitens.filter(id__in=permissoes_ids)
+        sub_permitidos = []
+        for sub in menu.subitens.all():
+
+            # Se o subitem não tem view associada → mostrar sempre
+            if sub.view_id is None:
+                sub_permitidos.append(sub)
+                continue
+
+            # Filtra submenus usando a view vinculada
+            if sub.view_id in permissoes_ids:
+                sub_permitidos.append(sub)
+
+        menu.subitens_permitidos = sub_permitidos
 
     return {'menus': menus}
 
