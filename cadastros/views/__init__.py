@@ -1,0 +1,1 @@
+from .cadastrar_fornecedor import *  

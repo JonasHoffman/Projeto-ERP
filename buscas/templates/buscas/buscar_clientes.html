@@ -1,0 +1,9 @@
+{% for c in lista %}
+<div class="result-item"
+     onclick="selecionarItem('{{ c.id }}','{{ c.nome }}')">
+    <b>{{ c.nome }}</b><br>
+    CPF/CNPJ: {{ c.cnpj|default:c.cpf }}
+</div>
+{% empty %}
+<p>Nenhum cliente encontrado.</p>
+{% endfor %}

@@ -1,0 +1,289 @@
+{% extends "templates/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h2>Cadastrar Fornecedor</h2>
+
+<link rel="stylesheet" href="{% static 'busca/busca.css' %}">
+<script src="{% static 'javascript/cadastro_fornecedor.js' %}"></script>
+
+{% include "buscas/modal_busca_base.html" %}
+
+<form method="POST">
+    {% csrf_token %}
+
+    <!-- =============================== -->
+    <!-- DADOS DO FORNECEDOR -->
+    <!-- =============================== -->
+    <fieldset>
+        <legend>Dados do Fornecedor</legend>
+
+        <div class="form-grid">
+
+            <div class="linha">
+                <label>Nome fantasia</label>
+                {{ form.nome_fantasia }}
+            </div>
+
+            <div class="linha">
+                <label>Razão social</label>
+                {{ form.razao_social }}
+            </div>
+
+            <div class="linha">
+                <label>CNPJ</label>
+                {{ form.cnpj }}
+            </div>
+
+            <div class="linha">
+                <label>Inscrição estadual</label>
+                {{ form.inscricao_estadual }}
+            </div>
+
+            <div class="linha">
+                <label>Inscrição municipal</label>
+                {{ form.inscricao_municipal }}
+            </div>
+
+            <div class="linha">
+                <label>Email</label>
+                {{ form.email }}
+            </div>
+
+            <!-- =============================== -->
+            <!-- NOVOS CAMPOS: TRANSPORTADORA E BANCO -->
+            <!-- =============================== -->
+
+            <div class="linha">
+                <label>Transportadora</label>
+                <div class="input-com-lupa">
+                    <input type="text" id="transportadora_input" name="transportadora_nome" readonly>
+                    <input type="hidden" id="transportadora_id" name="transportadora">
+                    <button type="button" class="btn-lupa"
+                        onclick="abrirModalBusca('/buscas/transportadoras/', 'Transportadoras', 'transportadora_input', 'transportadora_id')">
+                        🔍
+                    </button>
+                </div>
+            </div>
+
+            <div class="linha">
+                <label>Banco</label>
+                <div class="input-com-lupa">
+                    <input type="text" id="banco_input" name="banco_nome" readonly>
+                    <input type="hidden" id="banco_id" name="banco">
+                    <button type="button" class="btn-lupa"
+                        onclick="abrirModalBusca('/buscas/bancos/', 'Bancos', 'banco_input', 'banco_id')">
+                        🔍
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </fieldset>
+
+    <hr>
+
+    <!-- =============================== -->
+    <!-- ENDEREÇOS -->
+    <!-- =============================== -->
+    <fieldset>
+        <legend>Endereços</legend>
+        {{ endereco_fs.management_form }}
+
+        <div id="enderecos-container">
+            {% for form in endereco_fs %}
+            <div class="end-bloco form-grid">
+
+                <div class="linha">
+                    <label>Logradouro</label>
+                    {{ form.logradouro }}
+                </div>
+
+                <div class="linha">
+                    <label>Número</label>
+                    {{ form.numero }}
+                </div>
+
+                <div class="linha">
+                    <label>Bairro</label>
+                    {{ form.bairro }}
+                </div>
+
+                <div class="linha">
+                    <label>Cidade</label>
+                    {{ form.cidade }}
+                </div>
+
+                <div class="linha">
+                    <label>Estado</label>
+                    {{ form.estado }}
+                </div>
+
+                <div class="linha">
+                    <label>CEP</label>
+                    {{ form.cep }}
+                </div>
+
+                <div class="linha delete-box">
+                    <label>Excluir</label>
+                    {{ form.DELETE }}
+                </div>
+
+            </div>
+            <hr>
+            {% endfor %}
+        </div>
+
+        <!-- Template Dinâmico -->
+        <template id="endereco-template">
+            <div class="end-bloco form-grid">
+                <div class="linha">
+                    <label>Logradouro</label>
+                    <input type="text" name="end-__index__-logradouro">
+                </div>
+
+                <div class="linha">
+                    <label>Número</label>
+                    <input type="text" name="end-__index__-numero">
+                </div>
+
+                <div class="linha">
+                    <label>Bairro</label>
+                    <input type="text" name="end-__index__-bairro">
+                </div>
+
+                <div class="linha">
+                    <label>Cidade</label>
+                    <input type="text" name="end-__index__-cidade">
+                </div>
+
+                <div class="linha">
+                    <label>Estado</label>
+                    <input type="text" name="end-__index__-estado">
+                </div>
+
+                <div class="linha">
+                    <label>CEP</label>
+                    <input type="text" name="end-__index__-cep">
+                </div>
+
+                <div class="linha delete-box">
+                    <label>Excluir</label>
+                    <input type="checkbox" name="end-__index__-DELETE">
+                </div>
+            </div>
+            <hr>
+        </template>
+
+        <button type="button" id="add-endereco">+ Adicionar Endereço</button>
+    </fieldset>
+
+    <hr>
+
+    <!-- =============================== -->
+    <!-- CONTATOS -->
+    <!-- =============================== -->
+    <fieldset>
+        <legend>Contatos</legend>
+        {{ contato_fs.management_form }}
+
+        <div id="contatos-container">
+            {% for form in contato_fs %}
+            <div class="cont-bloco form-grid">
+
+                <div class="linha">
+                    <label>Nome</label>
+                    {{ form.nome }}
+                </div>
+
+                <div class="linha">
+                    <label>Telefone</label>
+                    {{ form.telefone }}
+                </div>
+
+                <div class="linha">
+                    <label>Email</label>
+                    {{ form.email }}
+                </div>
+
+                <div class="linha">
+                    <label>Cargo</label>
+                    {{ form.cargo }}
+                </div>
+
+                <div class="linha delete-box">
+                    <label>Excluir</label>
+                    {{ form.DELETE }}
+                </div>
+
+            </div>
+            <hr>
+            {% endfor %}
+        </div>
+
+        <!-- Template Dinâmico -->
+        <template id="contato-template">
+            <div class="cont-bloco form-grid">
+
+                <div class="linha">
+                    <label>Nome</label>
+                    <input type="text" name="cont-__index__-nome">
+                </div>
+
+                <div class="linha">
+                    <label>Telefone</label>
+                    <input type="text" name="cont-__index__-telefone">
+                </div>
+
+                <div class="linha">
+                    <label>Email</label>
+                    <input type="email" name="cont-__index__-email">
+                </div>
+
+                <div class="linha">
+                    <label>Cargo</label>
+                    <input type="text" name="cont-__index__-cargo">
+                </div>
+
+                <div class="linha delete-box">
+                    <label>Excluir</label>
+                    <input type="checkbox" name="cont-__index__-DELETE">
+                </div>
+
+            </div>
+            <hr>
+        </template>
+
+        <button type="button" id="add-contato">+ Adicionar Contato</button>
+    </fieldset>
+
+    <br><br>
+    <button type="submit">Salvar</button>
+</form>
+
+
+<!-- =============================== -->
+<!-- JAVASCRIPT -->
+<!-- =============================== -->
+<script>
+function addForm(prefix, templateId, containerId) {
+    const total = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
+    const idx = total.value;
+
+    const html = document.getElementById(templateId).innerHTML.replace(/__index__/g, idx);
+    document.getElementById(containerId).insertAdjacentHTML("beforeend", html);
+
+    total.value = parseInt(total.value) + 1;
+}
+
+document.getElementById("add-endereco").addEventListener("click", () => {
+    addForm("end", "endereco-template", "enderecos-container");
+});
+
+document.getElementById("add-contato").addEventListener("click", () => {
+    addForm("cont", "contato-template", "contatos-container");
+});
+</script>
+
+{% endblock %}

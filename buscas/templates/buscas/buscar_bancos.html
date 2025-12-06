@@ -1,0 +1,8 @@
+{% for b in lista %}
+<div class="result-item"
+     onclick="selecionarItem('{{ b.id }}','{{ b.nome }}')">
+    <b>{{ b.nome }}</b> - Nº {{ b.numero }}
+</div>
+{% empty %}
+<p>Nenhum banco encontrado.</p>
+{% endfor %}

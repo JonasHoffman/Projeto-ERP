@@ -1,0 +1,9 @@
+{% for f in lista %}
+<div class="result-item"
+     onclick="selecionarItem('{{ f.id }}','{{ f.nome_fantasia }}')">
+    <b>{{ f.nome_fantasia }}</b><br>
+    CNPJ: {{ f.cnpj }}
+</div>
+{% empty %}
+<p>Nenhum fornecedor encontrado.</p>
+{% endfor %}
