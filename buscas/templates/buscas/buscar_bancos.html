@@ -1,8 +1,59 @@
-{% for b in lista %}
-<div class="result-item"
-     onclick="selecionarItem('{{ b.id }}','{{ b.nome }}')">
-    <b>{{ b.nome }}</b> - Nº {{ b.numero }}
-</div>
-{% empty %}
-<p>Nenhum banco encontrado.</p>
-{% endfor %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Buscar Banco</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { padding: 6px; border: 1px solid #ccc; }
+        tr:hover { background-color: #f0f0f0; }
+        button { cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h3>Buscar Banco</h3>
+
+    <form method="get">
+        <input type="text" name="q" placeholder="Filtrar..." value="{{ request.GET.q }}">
+        <button type="submit">Buscar</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Número</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for b in lista %}
+            <!-- ⚠️ Importante: adicione a classe result-item e os data-atributos -->
+            <tr class="result-item" data-id="{{ b.id }}" data-nome="{{ b.nome }}">
+                <td>{{ b.nome }}</td>
+                <td>{{ b.numero }}</td>
+                <td>
+                    <button type="button"
+                        onclick="selecionarRegistro('{{ b.id }}', '{{ b.nome }}')">
+                        Selecionar
+                    </button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">Nenhum banco encontrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        // Mesma função usada no blur e no botão Selecionar
+        function selecionarRegistro(id, nome) {
+            if (window.opener) {
+                window.opener.preencherBanco(id, nome);
+            }
+            window.close();
+        }
+    </script>
+</body>
+</html>

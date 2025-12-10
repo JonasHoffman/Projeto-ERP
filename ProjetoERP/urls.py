@@ -21,6 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include("accounts.urls")),
     path('cadastros/', include("cadastros.urls")),
-    path('buscas/', include("buscas.urls")),
+    path('buscas/', include('buscas.urls', namespace='busca')),
 
 ]

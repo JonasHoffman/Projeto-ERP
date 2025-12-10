@@ -1,9 +1,65 @@
-{% for t in lista %}
-<div class="result-item"
-     onclick="selecionarItem('{{ t.id }}','{{ t.nome }}')">
-    <b>{{ t.nome }}</b><br>
-    CNPJ: {{ t.cnpj }}
-</div>
-{% empty %}
-<p>Nenhuma transportadora encontrada.</p>
-{% endfor %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Buscar Transportadora</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            padding: 6px;
+            border: 1px solid #ccc;
+        }
+        tr:hover {
+            background-color: #f0f0f0;
+        }
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h3>Buscar Transportadora</h3>
+
+    <form method="get">
+        <input type="text" name="q" placeholder="Filtrar..." value="{{ request.GET.q }}">
+        <button type="submit">Buscar</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in transportadoras %}
+            <tr class="result-item" data-id="{{ t.id }}" data-nome="{{ t.nome }}">
+                <td>{{ t.nome }}</td>
+                <td>
+                    <button type="button"
+                        onclick="selecionarRegistro('{{ t.id }}', '{{ t.nome }}')">
+                        Selecionar
+                    </button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">Nenhuma transportadora encontrada</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        function selecionarRegistro(id, nome) {
+            if (window.opener) {
+                window.opener.preencherTransportadora(id, nome);
+            }
+            window.close();
+        }
+    </script>
+</body>
+</html>

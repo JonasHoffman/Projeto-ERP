@@ -1,0 +1,28 @@
+<form method="POST">
+    {% csrf_token %}
+
+    <h3>Dados do Cliente</h3>
+    {{ form.as_p }}
+
+    <hr>
+
+    <h3>Endereços</h3>
+    {{ endereco_formset.management_form }}
+    {% for f in endereco_formset %}
+        <div class="endereco-bloco">
+            {{ f.as_p }}
+        </div>
+    {% endfor %}
+
+    <hr>
+
+    <h3>Contatos</h3>
+    {{ contato_formset.management_form }}
+    {% for f in contato_formset %}
+        <div class="contato-bloco">
+            {{ f.as_p }}
+        </div>
+    {% endfor %}
+
+    <button type="submit">Salvar</button>
+</form>

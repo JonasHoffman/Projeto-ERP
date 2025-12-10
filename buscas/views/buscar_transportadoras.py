@@ -13,5 +13,6 @@ def buscar_transportadoras(request):
         lista = Transportadora.objects.all().order_by("nome")
 
     return render(request, "buscas/buscar_transportadoras.html", {
-        "lista": lista
-    })
+    "transportadoras": lista,
+    "query": termo
+})

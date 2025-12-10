@@ -5,10 +5,10 @@
 
 <h2>Cadastrar Fornecedor</h2>
 
-<link rel="stylesheet" href="{% static 'busca/busca.css' %}">
+
 <script src="{% static 'javascript/cadastro_fornecedor.js' %}"></script>
 
-{% include "buscas/modal_busca_base.html" %}
+
 
 <form method="POST">
     {% csrf_token %}
@@ -58,24 +58,22 @@
             <div class="linha">
                 <label>Transportadora</label>
                 <div class="input-com-lupa">
-                    <input type="text" id="transportadora_input" name="transportadora_nome" readonly>
+                    <input type="text" id="transportadora_input" name="transportadora_nome" >
                     <input type="hidden" id="transportadora_id" name="transportadora">
                     <button type="button" class="btn-lupa"
-                        onclick="abrirModalBusca('/buscas/transportadoras/', 'Transportadoras', 'transportadora_input', 'transportadora_id')">
-                        🔍
-                    </button>
+                    id="btn-transportadora"
+                    data-url="{% url 'busca:busca_transportadoras' %}">🔍</button>
                 </div>
             </div>
 
             <div class="linha">
                 <label>Banco</label>
                 <div class="input-com-lupa">
-                    <input type="text" id="banco_input" name="banco_nome" readonly>
+                    <input type="text" id="banco_input" name="banco_nome" >
                     <input type="hidden" id="banco_id" name="banco">
                     <button type="button" class="btn-lupa"
-                        onclick="abrirModalBusca('/buscas/bancos/', 'Bancos', 'banco_input', 'banco_id')">
-                        🔍
-                    </button>
+                    id="btn-banco"
+                    data-url="{% url 'busca:busca_bancos' %}">🔍</button>
                 </div>
             </div>
 
@@ -265,25 +263,6 @@
 
 <!-- =============================== -->
 <!-- JAVASCRIPT -->
-<!-- =============================== -->
-<script>
-function addForm(prefix, templateId, containerId) {
-    const total = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
-    const idx = total.value;
 
-    const html = document.getElementById(templateId).innerHTML.replace(/__index__/g, idx);
-    document.getElementById(containerId).insertAdjacentHTML("beforeend", html);
-
-    total.value = parseInt(total.value) + 1;
-}
-
-document.getElementById("add-endereco").addEventListener("click", () => {
-    addForm("end", "endereco-template", "enderecos-container");
-});
-
-document.getElementById("add-contato").addEventListener("click", () => {
-    addForm("cont", "contato-template", "contatos-container");
-});
-</script>
 
 {% endblock %}
