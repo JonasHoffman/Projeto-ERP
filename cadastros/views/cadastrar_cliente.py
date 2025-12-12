@@ -26,7 +26,7 @@ def cadastrar_cliente(request):
 
     return render(
         request,
-        "clientes/cadastrar_cliente.html",
+        "cadastro_cliente.html",
         {
             "form": form,
             "endereco_formset": endereco_formset,

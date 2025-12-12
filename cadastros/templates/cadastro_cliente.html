@@ -1,28 +1,77 @@
+
+{% extends "templates/base.html" %}
+{% load static %}
+
+{% block content %}
+
 <form method="POST">
     {% csrf_token %}
 
-    <h3>Dados do Cliente</h3>
-    {{ form.as_p }}
+    <!-- ====================================================== -->
+    <!-- DADOS DO CLIENTE -->
+    <!-- ====================================================== -->
+    <fieldset class="bloco bloco-principal">
+        <legend>Dados do Cliente</legend>
+
+        <div class="form-grid">
+            {{ form.as_p }}
+        </div>
+    </fieldset>
 
     <hr>
 
-    <h3>Endereços</h3>
-    {{ endereco_formset.management_form }}
-    {% for f in endereco_formset %}
-        <div class="endereco-bloco">
-            {{ f.as_p }}
+    <!-- ====================================================== -->
+    <!-- ENDEREÇOS -->
+    <!-- ====================================================== -->
+    <fieldset class="bloco">
+        <legend>Endereços</legend>
+
+        {{ endereco_formset.management_form }}
+
+        <div id="enderecos-container">
+            {% for f in endereco_formset %}
+                <div class="sub-bloco">
+                    <h4>Endereço {{ forloop.counter }}</h4>
+                    <div class="form-grid">
+                        {{ f.as_p }}
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
+
+        <!-- Botão para adicionar futuramente com JS -->
+        <button type="button" id="add-endereco" class="btn-add">+ Adicionar endereço</button>
+    </fieldset>
 
     <hr>
 
-    <h3>Contatos</h3>
-    {{ contato_formset.management_form }}
-    {% for f in contato_formset %}
-        <div class="contato-bloco">
-            {{ f.as_p }}
-        </div>
-    {% endfor %}
+    <!-- ====================================================== -->
+    <!-- CONTATOS -->
+    <!-- ====================================================== -->
+    <fieldset class="bloco">
+        <legend>Contatos</legend>
 
-    <button type="submit">Salvar</button>
+        {{ contato_formset.management_form }}
+
+        <div id="contatos-container">
+            {% for f in contato_formset %}
+                <div class="sub-bloco">
+                    <h4>Contato {{ forloop.counter }}</h4>
+                    <div class="form-grid">
+                        {{ f.as_p }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <button type="button" id="add-contato" class="btn-add">+ Adicionar contato</button>
+    </fieldset>
+
+    <hr>
+
+    <button type="submit" class="btn-salvar">Salvar</button>
+
 </form>
+
+<script src="{% static 'javascript/cadastro_cliente.js' %}"></script>
+{% endblock  %}

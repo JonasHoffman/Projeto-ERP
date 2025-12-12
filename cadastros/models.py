@@ -74,8 +74,18 @@ class Fornecedor(models.Model):
 
     def __str__(self):
         return f"{self.nome_fantasia} ({self.cnpj})"    
-class TipoContribuiente(models.Model):
-    nome = models.CharField(max_length=15) 
+
+class TipoCliente(models.Model):
+    codigo = models.CharField(max_length=5, unique=True)
+    descricao = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Tipo de Cliente"
+        verbose_name_plural = "Tipos de Cliente"
+        ordering = ["descricao"]
+
+    def __str__(self):
+        return self.descricao
 
 class TabelaPreco(models.Model):
     nome = models.CharField(max_length=15) 
@@ -125,12 +135,21 @@ class EnderecoCliente(models.Model):
 
 class Cliente(models.Model):
     TIPO_PESSOA = (("F", "Pessoa Física"), ("J", "Pessoa Jurídica"))
-
+    
     codigo = models.CharField(max_length=10, unique=True)
     tipo_pessoa = models.CharField(max_length=1, choices=TIPO_PESSOA, default="F")
     nome = models.CharField(max_length=150)
+    razao_social = models.CharField(max_length=150,null=True)
+    inscricao_estadual = models.CharField(max_length=20, blank=True, null=True)
     cpf_cnpj = models.CharField(max_length=18, unique=True)
     email = models.EmailField(blank=True, null=True)
+    tipo_cliente = models.ForeignKey(
+        TipoCliente,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="clientes"
+    )
     telefone = models.CharField(max_length=20, blank=True, null=True)
     endereco = models.ForeignKey(
         EnderecoCliente,

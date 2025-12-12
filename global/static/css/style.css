@@ -369,3 +369,105 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background: #3f4a75;
 }
+
+/* Cadastro_cliente */
+
+.bloco {
+    border: 1px solid #dcdcdc;
+    padding: 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    background: #fafafa;
+}
+
+.bloco-principal {
+    background: #ffffff;
+}
+
+.sub-bloco {
+    border: 1px dashed #c3c3c3;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    background: #fff;
+}
+
+legend {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 0 6px;
+}
+
+.form-grid p {
+    margin: 8px 0;
+}
+
+.btn-add {
+    margin-top: 10px;
+    padding: 6px 10px;
+    background: #e3e3ff;
+    border: 1px solid #8a8aff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-salvar {
+    padding: 10px 20px;
+    background: #3c7cff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+form p {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+}
+
+/* Labels */
+form p label {
+    margin-bottom: 4px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* ====== CAMPOS PADRÃO ====== */
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="date"],
+input[type="tel"],
+textarea,
+select {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 14px;
+
+    background-color: #fff;
+    color: #333;
+
+    border: 1px solid #ccc;
+    border-radius: 6px;
+
+    outline: none;
+    transition: 0.2s;
+}
+
+/* Textarea */
+textarea {
+    min-height: 70px;
+    resize: vertical;
+}
+
+/* Foco (mesmo estilo do seu select) */
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
+}
+
+/* Campos desabilitados */

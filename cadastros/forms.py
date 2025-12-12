@@ -48,13 +48,25 @@ class ClienteForm(forms.ModelForm):
         fields = [
             "tipo_pessoa",
             "nome",
+            "razao_social",
+            "inscricao_estadual",
             "cpf_cnpj",
             "email",
             "telefone",
-            "tabela_preco",
-            "forma_pagamento",
-            "vendedor",
+            
         ]
+
+        labels = {
+            "tipo_pessoa": "Tipo de Pessoa",
+            "nome": "Nome",
+            "razao_social": "Razão Social",
+            "inscricao_estadual": "Inscrição Estadual (IE)",
+            "cpf_cnpj": "CPF ou CNPJ",
+            "email": "E-mail",
+            "telefone": "Telefone",
+            
+        }
+
 
 class EnderecoClienteForm(forms.ModelForm):
     class Meta:
@@ -84,12 +96,13 @@ EnderecoFormSet = inlineformset_factory(
     EnderecoCliente,
     form=EnderecoClienteForm,
     extra=1,
-    can_delete=True
+    can_delete=False,
+    
 )
 ContatoFormSet = inlineformset_factory(
     Cliente,
     Contato,
     form=ContatoForm,
     extra=1,
-    can_delete=True
+    can_delete=False,
 )
