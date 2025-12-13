@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import modelformset_factory
-from cadastros.models import Fornecedor, EnderecoFornecedor, ContatoFornecedor,Cliente,EnderecoCliente,Contato
+from cadastros.models import Fornecedor, EnderecoFornecedor, ContatoFornecedor,Cliente,EnderecoCliente,Contato,RegraPreco,ESTADOS_BRASIL,DescontoCliente
 from django.forms import inlineformset_factory
 
 class FornecedorForm(forms.ModelForm):
@@ -105,4 +105,51 @@ ContatoFormSet = inlineformset_factory(
     form=ContatoForm,
     extra=1,
     can_delete=False,
+)
+
+class RegraPrecoForm(forms.ModelForm):
+    class Meta:
+        model = RegraPreco
+        fields = [
+            "tabela_preco",
+            "estado",
+            "tipo_cliente",
+            "percentual",
+            "ativo",
+        ]
+        widgets = {
+            'estado': forms.Select(choices=[('', 'Todos os Estados')] + list(ESTADOS_BRASIL)),
+            "percentual": forms.NumberInput(attrs={
+                "step": "0.01",
+                "placeholder": "Ex: 10 ou -5"
+            })
+        }
+class DescontoClienteForm(forms.ModelForm):
+    class Meta:
+        model = DescontoCliente
+        fields = [
+            "percentual",
+            "valor_minimo",
+            
+            "data_inicio",
+            "data_fim",
+            "ativo",
+        ]
+        widgets = {
+            "percentual": forms.NumberInput(attrs={
+                "step": "0.01",
+                "placeholder": "Ex: 5"
+            }),
+            "valor_minimo": forms.NumberInput(attrs={
+                "step": "0.01",
+                "placeholder": "Ex: 10000"
+            }),
+        }
+
+DescontoClienteFormSet = inlineformset_factory(
+    Cliente,
+    DescontoCliente,
+    form=DescontoClienteForm,
+    extra=1,
+    can_delete=False
 )

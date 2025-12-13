@@ -1,0 +1,50 @@
+{% extends "templates/base.html" %}
+
+{% block content %}
+<h2>Cadastrar Regra de Preço</h2>
+
+<form method="post" class="form-erp">
+    {% csrf_token %}
+
+    <fieldset>
+        <legend>Dados da Regra</legend>
+
+        <div class="linha">
+            <label>Tabela de Preço</label>
+            {{ form.tabela_preco }}
+        </div>
+
+        <div class="linha">
+            <label>Estado (UF)</label>
+            {{ form.estado }}
+            <small>Deixe vazio para todos os estados</small>
+        </div>
+
+        <div class="linha">
+            <label>Tipo de Cliente</label>
+            {{ form.tipo_cliente }}
+            <small>Deixe vazio para todos os tipos</small>
+        </div>
+
+        <div class="linha">
+            <label>Percentual (%)</label>
+            {{ form.percentual }}
+        </div>
+
+        <div class="linha">
+            <label>
+                {{ form.ativo }} Regra ativa
+            </label>
+        </div>
+    </fieldset>
+
+    <div class="acoes">
+        <button type="submit" class="btn btn-salvar">
+            Salvar Regra
+        </button>
+        {% comment %} <a href="{% url 'lista_regras_preco' %}" class="btn btn-cancelar"> {% endcomment %}
+            Cancelar
+        </a>
+    </div>
+</form>
+{% endblock %}

@@ -1,4 +1,37 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
+
+# utils/choices.py (ou no próprio models.py)
+
+ESTADOS_BRASIL = (
+    ('AC', 'Acre'),
+    ('AL', 'Alagoas'),
+    ('AP', 'Amapá'),
+    ('AM', 'Amazonas'),
+    ('BA', 'Bahia'),
+    ('CE', 'Ceará'),
+    ('DF', 'Distrito Federal'),
+    ('ES', 'Espírito Santo'),
+    ('GO', 'Goiás'),
+    ('MA', 'Maranhão'),
+    ('MT', 'Mato Grosso'),
+    ('MS', 'Mato Grosso do Sul'),
+    ('MG', 'Minas Gerais'),
+    ('PA', 'Pará'),
+    ('PB', 'Paraíba'),
+    ('PR', 'Paraná'),
+    ('PE', 'Pernambuco'),
+    ('PI', 'Piauí'),
+    ('RJ', 'Rio de Janeiro'),
+    ('RN', 'Rio Grande do Norte'),
+    ('RS', 'Rio Grande do Sul'),
+    ('RO', 'Rondônia'),
+    ('RR', 'Roraima'),
+    ('SC', 'Santa Catarina'),
+    ('SP', 'São Paulo'),
+    ('SE', 'Sergipe'),
+    ('TO', 'Tocantins'),
+)
 
 class Fornecedor(models.Model):
 
@@ -90,6 +123,9 @@ class TipoCliente(models.Model):
 class TabelaPreco(models.Model):
     nome = models.CharField(max_length=15) 
 
+    def __str__(self):
+        return f"{self.nome}"
+
 class FormaPagamento(models.Model):
     nome = models.CharField(max_length=15) 
 
@@ -131,7 +167,13 @@ class EnderecoCliente(models.Model):
     complemento = models.CharField(max_length=100, blank=True, null=True)
     bairro = models.CharField(max_length=100)
     cidade = models.CharField(max_length=100)
-    estado = models.CharField(max_length=2)
+    estado = models.CharField(
+        max_length=2,
+        choices=ESTADOS_BRASIL,
+        blank=False,
+        null=False,
+        help_text="Vazio = todos os estados"
+    )
 
 class Cliente(models.Model):
     TIPO_PESSOA = (("F", "Pessoa Física"), ("J", "Pessoa Jurídica"))
@@ -158,7 +200,16 @@ class Cliente(models.Model):
         blank=True,
         related_name="cliente_principal"
     )
-
+    percentual_ajuste = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0,
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(100)
+        ],
+        help_text="Percentual de ajuste futuro (0 a 100)"
+    )
     tabela_preco = models.ForeignKey(TabelaPreco, on_delete=models.SET_NULL, null=True, blank=True, related_name="clientes")
     forma_pagamento = models.ForeignKey(FormaPagamento, on_delete=models.SET_NULL, null=True, blank=True, related_name="clientes")
     vendedor = models.ForeignKey(Vendedor, on_delete=models.SET_NULL, null=True, blank=True, related_name="clientes")
@@ -183,6 +234,37 @@ class Cliente(models.Model):
                 self.codigo = "1"
         super().save(*args, **kwargs)
 
+class DescontoCliente(models.Model):
+    cliente = models.ForeignKey(
+        Cliente,
+        on_delete=models.CASCADE,
+        related_name="descontos"
+    )
+
+    percentual = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        help_text="Ex: 5 = 5%"
+    )
+
+    valor_minimo = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        help_text="Valor mínimo do pedido para ativar o desconto"
+    )
+
+    ativo = models.BooleanField(default=True)
+
+    data_inicio = models.DateField(blank=True, null=True)
+    data_fim = models.DateField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Desconto por Cliente"
+        verbose_name_plural = "Descontos por Cliente"
+
+    def __str__(self):
+        return f"{self.percentual}% acima de {self.valor_minimo}"
+    
 class Contato(models.Model):
     # 🔹 O cliente ainda pode não existir no momento do cadastro
     cliente = models.ForeignKey(
@@ -239,7 +321,13 @@ class EnderecoFornecedor(models.Model):
     complemento = models.CharField(max_length=100, blank=True, null=True)
     bairro = models.CharField(max_length=100)
     cidade = models.CharField(max_length=100)
-    estado = models.CharField(max_length=2)
+    estado = models.CharField(
+        max_length=2,
+        choices=ESTADOS_BRASIL,
+        blank=False,
+        null=False,
+        help_text="Vazio = todos os estados"
+    )
     
 
     def __str__(self):
@@ -268,7 +356,7 @@ class ProdutoBase(models.Model):
     unidade = models.CharField(max_length=10, blank=True)
     grupo = models.ForeignKey(Grupo, on_delete=models.SET_NULL, null=True, blank=True)
     descriçao = models.CharField(max_length=25) 
-    preco_venda = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    preco_base = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     def __str__(self):
         return self.codigo
     
@@ -279,5 +367,53 @@ class Banco(models.Model):
     def __str__(self):
         return f"{self.codigo} - {self.nome}"
     
+class RegraPreco(models.Model):
+    tabela_preco = models.ForeignKey(
+        TabelaPreco,
+        on_delete=models.CASCADE,
+        related_name="regras"
+    )
 
+    estado = models.CharField(
+        max_length=2,
+        blank=True,
+        null=True,
+        help_text="Ex: SP, RJ. Vazio = todos"
+    )
 
+    tipo_cliente = models.ForeignKey(
+        TipoCliente,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        help_text="Ex: Atacado, Varejo. Vazio = todos"
+    )
+
+    percentual = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        help_text="Ex: 10 = +10%, -5 = -5%"
+    )
+
+    ativo = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Regra de Preço"
+        verbose_name_plural = "Regras de Preço"
+
+    def nivel_especificidade(self):
+        """
+        Quanto mais campos preenchidos, mais específica
+        """
+        pontos = 0
+        if self.estado:
+            pontos += 1
+        if self.tipo_cliente:
+            pontos += 1
+        return pontos
+
+class ItemVenda(models.Model):
+    # venda = models.ForeignKey('Venda', on_delete=models.CASCADE)
+    produto = models.ForeignKey(ProdutoBase, on_delete=models.PROTECT)
+    quantidade = models.DecimalField(max_digits=10, decimal_places=2)
+    preco_unitario = models.DecimalField(max_digits=10, decimal_places=2)

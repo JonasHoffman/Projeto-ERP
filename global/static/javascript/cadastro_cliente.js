@@ -40,5 +40,7 @@ function adicionarForm(prefixo, containerId, botaoId) {
 document.addEventListener("DOMContentLoaded", function () {
     adicionarForm("enderecos", "enderecos-container", "add-endereco");
     adicionarForm("contatos", "contatos-container", "add-contato");
+    // 🔥 DESCONTO POR CLIENTE
+    adicionarForm("descontos", "descontos-container", "add-desconto");
 });
 

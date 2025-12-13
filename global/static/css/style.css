@@ -471,3 +471,153 @@ select:focus {
 }
 
 /* Campos desabilitados */
+/* ===============================
+   REGRAS DE PREÇO – ERP
+   =============================== */
+
+/* Container principal da tela */
+.regra-preco-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Fieldset específico */
+.regra-preco-container fieldset {
+    background: #ffffff;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    padding: 18px 22px;
+}
+
+/* Legend padrão ERP */
+.regra-preco-container legend {
+    font-size: 16px;
+    font-weight: 700;
+    color: #55608f;
+    padding: 0 8px;
+}
+
+/* Grid padrão da regra */
+.regra-preco-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px 25px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .regra-preco-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Linha de formulário */
+.regra-preco-linha {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Labels */
+.regra-preco-linha label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 6px;
+}
+
+/* Inputs */
+.regra-preco-linha input,
+.regra-preco-linha select,
+.regra-preco-linha textarea {
+    padding: 9px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: #fff;
+    transition: 0.2s;
+}
+
+/* Foco */
+.regra-preco-linha input:focus,
+.regra-preco-linha select:focus,
+.regra-preco-linha textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
+}
+
+/* Textarea */
+.regra-preco-linha textarea {
+    min-height: 70px;
+    resize: vertical;
+}
+
+/* Ações (botões) */
+.regra-preco-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+/* Botão salvar */
+.regra-preco-btn-salvar {
+    width: 180px;
+    height: 40px;
+    background: #55608f;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.regra-preco-btn-salvar:hover {
+    background: #3f4a75;
+}
+
+/* Botão cancelar */
+.regra-preco-btn-cancelar {
+    width: 150px;
+    height: 40px;
+    background: #ffffff;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.regra-preco-btn-cancelar:hover {
+    background: #f5f5f5;
+}
+
+/* Status da regra */
+.regra-preco-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Badge */
+.regra-preco-badge {
+    padding: 4px 10px;
+    font-size: 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+/* Ativa */
+.regra-preco-badge.ativa {
+    background: #e7f6ec;
+    color: #2f8f4e;
+}
+
+/* Inativa */
+.regra-preco-badge.inativa {
+    background: #fdeaea;
+    color: #c0392b;
+}
