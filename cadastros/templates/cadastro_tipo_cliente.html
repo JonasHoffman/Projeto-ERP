@@ -1,0 +1,29 @@
+{% extends "templates/base_2.html" %}
+
+{% block content %}
+<h2>Tipos de Cliente</h2>
+<br>
+<a href="{% url 'cadastros:tipo_cliente_create' %}" class="btn-add">Novo Tipo Cliente</a>
+<br><br>
+
+<table class="table-list">
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Descrição</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tipo in tipos_clientes %}
+        <tr>
+            <td>{{ tipo.codigo }}</td>
+            <td>{{ tipo.descricao }}</td>
+            <td>
+                <a href="{% url 'cadastros:tipo_cliente_update' tipo.pk %}" class="btn-edit">Editar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

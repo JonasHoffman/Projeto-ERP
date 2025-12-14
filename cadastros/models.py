@@ -127,7 +127,45 @@ class TabelaPreco(models.Model):
         return f"{self.nome}"
 
 class FormaPagamento(models.Model):
-    nome = models.CharField(max_length=15) 
+    codigo = models.CharField(max_length=10, unique=True,blank=True)
+    nome = models.CharField(max_length=50)
+    gera_boleto = models.BooleanField(default=False)
+    ativo = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Forma de Pagamento"
+        verbose_name_plural = "Formas de Pagamento"
+        ordering = ["nome"]
+
+    def __str__(self):
+        return self.nome 
+    
+class CondicaoPagamento(models.Model):
+    codigo = models.CharField(max_length=10, unique=True)
+    nome = models.CharField(
+        max_length=50,
+        help_text="Ex: À vista, 7 dias, 7/14, 30/60/90"
+    )
+
+    forma_pagamento = models.ForeignKey(
+        FormaPagamento,
+        on_delete=models.PROTECT,
+        related_name="condicoes"
+    )
+
+    dias_vencimento = models.JSONField(
+        help_text="Ex: [0], [7], [7,14], [30,60,90]"
+    )
+
+    ativo = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Condição de Pagamento"
+        verbose_name_plural = "Condições de Pagamento"
+        ordering = ["nome"]
+
+    def __str__(self):
+        return f"{self.nome} ({self.forma_pagamento.nome})"
 
 class Vendedor(models.Model):
     nome = models.CharField(max_length=100)
@@ -211,7 +249,21 @@ class Cliente(models.Model):
         help_text="Percentual de ajuste futuro (0 a 100)"
     )
     tabela_preco = models.ForeignKey(TabelaPreco, on_delete=models.SET_NULL, null=True, blank=True, related_name="clientes")
-    forma_pagamento = models.ForeignKey(FormaPagamento, on_delete=models.SET_NULL, null=True, blank=True, related_name="clientes")
+    forma_pagamento = models.ForeignKey(
+        FormaPagamento,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="clientes"
+    )
+
+    condicao_pagamento = models.ForeignKey(
+        CondicaoPagamento,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="clientes"
+    )
     vendedor = models.ForeignKey(Vendedor, on_delete=models.SET_NULL, null=True, blank=True, related_name="clientes")
     data_cadastro = models.DateTimeField(auto_now_add=True,null=True)
     ativo = models.BooleanField(default=True)
@@ -335,27 +387,39 @@ class EnderecoFornecedor(models.Model):
 #Produtos
 
 class Transportadora(models.Model):
+    nome = models.CharField(max_length=150)
+    cnpj = models.CharField(max_length=18, unique=True,blank=True)
+    ativo = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.nome
+
+
+
+
+    def __str__(self):
+        return self.nome
+class GrupoProduto(models.Model):
+    codigo = models.CharField(max_length=10, unique=True)
     nome = models.CharField(max_length=100)
-    cnpj = models.CharField(max_length=20, blank=True, null=True, unique=True)
+    ativo = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nome
-
-
+class UnidadeMedida(models.Model):
+    sigla = models.CharField(max_length=10, unique=True)  # Ex: UN, KG, L
+    descricao = models.CharField(max_length=50)           # Ex: Unidade, Quilograma, Litro
 
     def __str__(self):
-        return self.nome
-class Grupo(models.Model):
-    codigo = models.CharField(max_length=10, blank=False,unique=True)
-    nome = models.CharField(max_length=30, unique=True)
-
+        return f"{self.sigla} - {self.descricao}"
+    
 class ProdutoBase(models.Model):
     codigo = models.CharField(max_length=30, unique=True)
     nome = models.CharField(max_length=100)
     ncm = models.CharField(max_length=10, blank=True)
-    unidade = models.CharField(max_length=10, blank=True)
-    grupo = models.ForeignKey(Grupo, on_delete=models.SET_NULL, null=True, blank=True)
-    descriçao = models.CharField(max_length=25) 
+    unidade = models.ForeignKey(UnidadeMedida, on_delete=models.PROTECT)
+    grupo = models.ForeignKey(GrupoProduto, on_delete=models.SET_NULL, null=True, blank=True)
+    descricao = models.CharField(max_length=255, blank=True)
     preco_base = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     def __str__(self):
         return self.codigo
@@ -363,9 +427,33 @@ class ProdutoBase(models.Model):
 class Banco(models.Model):
     codigo = models.CharField(max_length=10, unique=True)
     nome = models.CharField(max_length=150)
-
+    ativo = models.BooleanField(default=True)
+    
     def __str__(self):
         return f"{self.codigo} - {self.nome}"
+
+class ContaFinanceira(models.Model):
+    TIPO = (
+        ('CORRENTE', 'Conta Corrente'),
+        ('POUPANCA', 'Conta Poupança'),
+        ('DINHEIRO', 'Caixa / Dinheiro'),
+        ('PIX', 'Conta PIX'),
+    )
+
+    banco = models.ForeignKey(
+        Banco,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True
+    )
+    codigo = models.CharField(max_length=10, unique=True)
+    tipo = models.CharField(max_length=10, choices=TIPO)
+    descricao = models.CharField(max_length=100)
+
+    ativa = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.descricao
     
 class RegraPreco(models.Model):
     tabela_preco = models.ForeignKey(
@@ -417,3 +505,122 @@ class ItemVenda(models.Model):
     produto = models.ForeignKey(ProdutoBase, on_delete=models.PROTECT)
     quantidade = models.DecimalField(max_digits=10, decimal_places=2)
     preco_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+
+
+# logistica/models.py
+
+class Frete(models.Model):
+
+    TIPO_FRETE = (
+        ('FOB', 'FOB – Cliente paga'),
+        ('CIF', 'CIF – Empresa paga'),
+    )
+
+    STATUS = (
+        ('SOLICITADO', 'Solicitado'),
+        ('COTADO', 'Cotado'),
+        ('FATURADO', 'Faturado'),
+        ('CANCELADO', 'Cancelado'),
+    )
+
+    tipo = models.CharField(
+        max_length=3,
+        choices=TIPO_FRETE
+    )
+
+    transportadora = models.ForeignKey(
+        'cadastros.Transportadora',
+        on_delete=models.PROTECT
+    )
+
+    # Documento origem
+    # pedido_venda = models.OneToOneField(
+    #     'vendas.PedidoVenda',
+    #     on_delete=models.CASCADE,
+    #     related_name='frete'
+    # )
+
+    # Valores chegam depois
+    valor_cotado = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
+
+    valor_faturado = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
+
+    data_faturamento = models.DateField(
+        null=True,
+        blank=True
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS,
+        default='SOLICITADO'
+    )
+
+    observacoes = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    criado_em = models.DateTimeField(auto_now_add=True)
+    atualizado_em = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Frete'
+        verbose_name_plural = 'Fretes'
+
+    def __str__(self):
+        return f"Frete {self.get_tipo_display()} - Pedido {self.pedido_venda_id}"
+
+
+class CTe(models.Model):
+    chave = models.CharField(max_length=44, unique=True)
+    transportadora = models.ForeignKey('cadastros.Transportadora', on_delete=models.PROTECT)
+    valor_frete = models.DecimalField(max_digits=10, decimal_places=2)
+    data_emissao = models.DateField()
+    xml = models.TextField()
+
+    frete = models.OneToOneField(
+        Frete,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+
+
+class PlanoConta(models.Model):
+    codigo = models.CharField(max_length=20, unique=True)
+    nome = models.CharField(max_length=150)
+
+    TIPO = (
+        ('ENTRADA', 'Entrada'),
+        ('SAIDA', 'Saída'),
+    )
+    tipo = models.CharField(max_length=10, choices=TIPO)
+
+    pai = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name='filhos'
+    )
+
+    ativo = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Plano de Conta"
+        verbose_name_plural = "Plano de Contas"
+        ordering = ['codigo']
+
+    def __str__(self):
+        return f"{self.codigo} - {self.nome}"

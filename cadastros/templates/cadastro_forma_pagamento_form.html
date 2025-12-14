@@ -1,0 +1,13 @@
+{% extends "templates/base_cadastro.html" %}
+
+{% block content %}
+<h2 class="form-title">{% if object %}Editar{% else %}Nova{% endif %} Forma de Pagamento</h2>
+<form method="post" class="form-container">
+    {% csrf_token %}
+    <div class="form-fields">
+        {{ form.as_p }}
+    </div>
+    <button type="submit" class="btn-save">Salvar</button>
+</form>
+<a href="{% url 'cadastros:forma_pagamento_list' %}" class="btn-cancel">Voltar</a>
+{% endblock %}

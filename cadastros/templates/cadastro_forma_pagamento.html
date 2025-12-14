@@ -1,0 +1,33 @@
+{% extends "templates/base_cadastro.html" %}
+
+{% block content %}
+<h2>Formas de Pagamento</h2>
+<br>
+<a href="{% url 'cadastros:forma_pagamento_create' %}" class="btn-add">Nova Forma</a>
+<br><br>
+
+<table class="table-list">
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>Gera Boleto</th>
+            <th>Ativo</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for forma in formas_pagamento %}
+        <tr>
+            <td>{{ forma.codigo }}</td>
+            <td>{{ forma.nome }}</td>
+            <td>{{ forma.gera_boleto|yesno:"Sim,Não" }}</td>
+            <td>{{ forma.ativo|yesno:"Sim,Não" }}</td>
+            <td>
+                <a href="{% url 'cadastros:forma_pagamento_update' forma.pk %}" class="btn-edit">Editar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

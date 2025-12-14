@@ -1,0 +1,35 @@
+{% extends "templates/base_2.html" %}
+
+{% block content %}
+<h2>Condições de Pagamento</h2>
+<br>
+<a href="{% url 'cadastros:condicao_pagamento_create' %}" class="btn-add">Nova Condição</a>
+<br><br>
+
+<table class="table-list">
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>Forma Pagamento</th>
+            <th>Dias Vencimento</th>
+            <th>Ativo</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for condicao in condicoes_pagamento %}
+        <tr>
+            <td>{{ condicao.codigo }}</td>
+            <td>{{ condicao.nome }}</td>
+            <td>{{ condicao.forma_pagamento.nome }}</td>
+            <td>{{ condicao.dias_vencimento }}</td>
+            <td>{{ condicao.ativo|yesno:"Sim,Não" }}</td>
+            <td>
+                <a href="{% url 'cadastros:condicao_pagamento_update' condicao.pk %}" class="btn-edit">Editar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "templates/base_cadastro.html" %}
+
+{% block content %}
+<h2>Tabelas de Preço</h2>
+<br>
+<br>
+<a href="{% url 'cadastros:tabela_preco_create' %}" class="btn-add">Nova Tabela</a>
+<br>
+<br>
+<table class="table-list">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tabela in tabelas_preco %}
+        <tr>
+            <td>{{ tabela.nome }}</td>
+            <td>
+                <a href="{% url 'cadastros:tabela_preco_update' tabela.pk %}" class="btn-edit">Editar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
