@@ -1,0 +1,57 @@
+{% extends "templates/base_cadastro.html" %}
+
+{% block content %}
+
+<div class="content-listagem">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Contas Financeiras</h3>
+
+        <a href="{% url 'cadastros:conta_create' %}" class="btn-add">
+            Nova Conta
+        </a>
+    </div>
+
+    <table class="table-list">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Descrição</th>
+                <th>Tipo</th>
+                <th>Banco</th>
+                <th>Status</th>
+                <th style="width:120px;">Ações</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for conta in contas %}
+            <tr>
+                <td>{{ conta.codigo }}</td>
+                <td>{{ conta.descricao }}</td>
+                <td>{{ conta.get_tipo_display }}</td>
+                <td>{{ conta.banco|default:"—" }}</td>
+                <td>
+                    {% if conta.ativa %}
+                        <span class="status recebida">Ativa</span>
+                    {% else %}
+                        <span class="status atrasada">Inativa</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'cadastros:conta_update' conta.id %}" class="btn-edit">
+                        Editar
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">Nenhuma conta cadastrada.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

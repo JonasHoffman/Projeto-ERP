@@ -1,0 +1,98 @@
+{% extends "templates/base_2.html" %}
+{% block content %}
+
+<h2>Fluxo de Caixa</h2>
+
+<form method="get" class="mb-3 mt-3">
+  <div class="row">
+    <div class="col-md-3">
+      <label>Data Início:</label>
+      <input type="date" name="data_inicio" value="{{ data_inicio }}" class="form-control">
+    </div>
+
+    <div class="col-md-3">
+      <label>Data Fim:</label>
+      <input type="date" name="data_fim" value="{{ data_fim }}" class="form-control">
+    </div>
+
+    <div class="col-md-3 align-self-end">
+      <button class="btn btn-primary w-100">Filtrar</button>
+    </div>
+  </div>
+</form>
+
+<hr>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Data</th>
+      <th>Tipo</th>
+      <th>Descrição</th>
+      <th class="text-end">Valor</th>
+      <th class="text-center">Ações</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for mov in lancamentos %}
+    <tr>
+      <td>{{ mov.data|date:"d/m/Y" }}</td>
+
+      <td>
+        {% if mov.tipo == "Entrada" %}
+          <span class="text-success">Entrada</span>
+        {% else %}
+          <span class="text-danger">Saída</span>
+        {% endif %}
+      </td>
+
+      <td>{{ mov.descricao }}</td>
+
+      <td class="text-end">
+        {% if mov.tipo == "Entrada" %}
+          <span class="text-success">+ R$ {{ mov.valor|floatformat:2 }}</span>
+        {% else %}
+          <span class="text-danger">- R$ {{ mov.valor|floatformat:2 }}</span>
+        {% endif %}
+      </td>
+
+      <!-- ✅ ESTORNO AO LADO DO PAGAMENTO -->
+      <td class="text-center">
+        {% if mov.pagamento %}
+          {% if mov.pagamento.tipo_lancamento == 'NORMAL' %}
+            {% if mov.pagamento.estorno %}
+              <span class="badge bg-secondary">Estornado</span>
+            {% else %}
+              <a href="{% url 'estornar_pagamento' mov.pagamento.id %}"
+                 class="btn btn-sm btn-danger"
+                 onclick="return confirm('Confirmar estorno deste pagamento?');">
+                Estornar
+              </a>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="5" class="text-center">
+        Nenhum movimento encontrado no período.
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<hr>
+
+<h4>Saldo do Período</h4>
+<h3>
+  {% if saldo_final >= 0 %}
+    <span class="text-success">R$ {{ saldo_final|floatformat:2 }}</span>
+  {% else %}
+    <span class="text-danger">R$ {{ saldo_final|floatformat:2 }}</span>
+  {% endif %}
+</h3>
+
+{% endblock %}

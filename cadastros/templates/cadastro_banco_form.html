@@ -1,0 +1,45 @@
+{% extends "templates/base_cadastro.html" %}
+
+{% block content %}
+
+<div class="form-container">
+
+    <h3 class="form-title">{{ titulo }}</h3>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <fieldset>
+            <legend>Dados do Banco</legend>
+
+            <div class="form-grid">
+
+                <div class="linha">
+                    <label>Código</label>
+                    {{ form.codigo }}
+                </div>
+
+                <div class="linha">
+                    <label>Nome</label>
+                    {{ form.nome }}
+                </div>
+
+                <div class="linha">
+                    <label>
+                        {{ form.ativo }} Ativo
+                    </label>
+                </div>
+
+            </div>
+        </fieldset>
+
+        <div class="regra-preco-acoes">
+            <button type="submit" class="regra-preco-btn-salvar">Salvar</button>
+            <a href="{% url 'cadastros:banco_list' %}" class="regra-preco-btn-cancelar">Voltar</a>
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

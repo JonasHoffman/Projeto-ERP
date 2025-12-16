@@ -15,24 +15,30 @@ def cadastrar_fornecedor(request):
         if form.is_valid() and endereco_fs.is_valid() and contato_fs.is_valid():
             fornecedor = form.save()
 
-            # 🔹 Salva endereços
+            # Endereços
             enderecos = endereco_fs.save(commit=False)
             for e in enderecos:
                 e.fornecedor = fornecedor
                 e.save()
 
-            # 🔹 Salva contatos
+            # Contatos
             contatos = contato_fs.save(commit=False)
             for c in contatos:
                 c.fornecedor = fornecedor
                 c.save()
 
-            return redirect("lista_fornecedores")
+            return redirect('cadastros:conta_list')
 
     else:
         form = FornecedorForm()
-        endereco_fs = EnderecoFormSet(prefix="end", queryset=EnderecoFornecedor.objects.none())
-        contato_fs = ContatoFormSet(prefix="cont", queryset=ContatoFornecedor.objects.none())
+        endereco_fs = EnderecoFormSet(
+            prefix="end",
+            queryset=EnderecoFornecedor.objects.none()
+        )
+        contato_fs = ContatoFormSet(
+            prefix="cont",
+            queryset=ContatoFornecedor.objects.none()
+        )
 
     return render(request, "cadastro_fornecedor.html", {
         "form": form,

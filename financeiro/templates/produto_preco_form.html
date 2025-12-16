@@ -1,0 +1,42 @@
+{% extends "templates/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-3">
+        {% if form.instance.id %}
+            Editar Preço do Produto
+        {% else %}
+            Criar Preço para Produto
+        {% endif %}
+    </h2>
+
+    <div class="card shadow-sm p-4">
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label class="form-label">Produto</label>
+                {{ form.produto }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Tabela de Preço</label>
+                {{ form.tabela }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Preço</label>
+                {{ form.preco }}
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Salvar
+            </button>
+
+            <a href="{% url 'lista_produto_preco' %}" class="btn btn-secondary">
+                Cancelar
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

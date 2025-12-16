@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import modelformset_factory
-from cadastros.models import Fornecedor, EnderecoFornecedor, ContatoFornecedor,Cliente,EnderecoCliente,Contato,RegraPreco,ESTADOS_BRASIL,DescontoCliente
+from cadastros.models import Fornecedor, EnderecoFornecedor, ContatoFornecedor,Cliente,EnderecoCliente,Contato,RegraPreco,ESTADOS_BRASIL,DescontoCliente,Transportadora
+from cadastros.models import Banco, ContaFinanceira
 from django.forms import inlineformset_factory
 
 class FornecedorForm(forms.ModelForm):
@@ -92,19 +93,19 @@ class ContatoForm(forms.ModelForm):
             "cpf",
         ]
 EnderecoFormSet = inlineformset_factory(
-    Cliente,
-    EnderecoCliente,
-    form=EnderecoClienteForm,
+    Fornecedor,
+    EnderecoFornecedor,
+    form=EnderecoForm,
     extra=1,
-    can_delete=False,
-    
+    can_delete=True
 )
+
 ContatoFormSet = inlineformset_factory(
-    Cliente,
-    Contato,
+    Fornecedor,
+    ContatoFornecedor,
     form=ContatoForm,
     extra=1,
-    can_delete=False,
+    can_delete=True
 )
 
 class RegraPrecoForm(forms.ModelForm):
@@ -153,3 +154,47 @@ DescontoClienteFormSet = inlineformset_factory(
     extra=1,
     can_delete=False
 )
+
+
+
+
+class TransportadoraForm(forms.ModelForm):
+    class Meta:
+        model = Transportadora
+        fields = ['nome', 'cnpj', 'ativo']
+        widgets = {
+            'nome': forms.TextInput(attrs={'class': 'form-control'}),
+            'cnpj': forms.TextInput(attrs={'class': 'form-control'}),
+            'ativo': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+
+class BancoForm(forms.ModelForm):
+    class Meta:
+        model = Banco
+        fields = ['codigo', 'nome', 'ativo']
+
+        widgets = {
+            'codigo': forms.TextInput(attrs={
+                'placeholder': 'Ex: 001'
+            }),
+            'nome': forms.TextInput(attrs={
+                'placeholder': 'Nome do banco'
+            }),
+        }
+
+class ContaFinanceiraForm(forms.ModelForm):
+    class Meta:
+        model = ContaFinanceira
+        fields = ['codigo', 'descricao', 'tipo', 'banco', 'ativa']
+
+        widgets = {
+            'codigo': forms.TextInput(attrs={
+                'placeholder': 'Ex: CX001'
+            }),
+            'descricao': forms.TextInput(attrs={
+                'placeholder': 'Descrição da conta'
+            }),
+            'tipo': forms.Select(),
+            'banco': forms.Select(),
+        }

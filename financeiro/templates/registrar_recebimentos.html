@@ -1,0 +1,182 @@
+{% extends "templates/base.html" %}
+{% block content %}
+<form method="get">
+    Cliente: <input type="text" name="cliente" value="{{ filtros.cliente }}">
+    Data inicial: <input type="date" name="data_inicial" value="{{ filtros.data_inicial }}">
+    Data final: <input type="date" name="data_final" value="{{ filtros.data_final }}">
+
+    Situação:
+    <select name="situacao">
+        <option value="">Todas</option>
+        <option value="Aberta" {% if filtros.situacao == "Aberta" %}selected{% endif %}>Aberta</option>
+        <option value="Parcial" {% if filtros.situacao == "Parcial" %}selected{% endif %}>Parcial</option>
+        <option value="Recebida" {% if filtros.situacao == "Recebida" %}selected{% endif %}>Recebida</option>
+    </select>
+
+    <button type="submit">Filtrar</button>
+</form>
+
+<hr>
+
+<form method="post">
+    {% csrf_token %}
+
+    <button type="submit">Baixar Selecionadas</button>
+    <input type="date" name="data_recebimento" id="data_global">
+
+    <table border="1">
+    <tr>
+        <th>#</th>
+        <th>Cliente</th>
+        <th>Vencimento</th>
+        <th>Valor</th>
+        <th>Recebido</th>
+        <th>Saldo</th>
+        <th>Data Recebimento</th>
+        <th>Valor Recebido</th>
+        <th>Situação</th>
+        <th>Ações</th>
+    </tr>
+
+    {% for c in contas %}
+    <tr>
+        <td>
+            {% if c.situacao != "Recebida" %}
+            <input type="checkbox" name="selecionadas" value="{{ c.pk }}">
+            {% endif %}
+        </td>
+
+        <td>{{ c.cliente }}</td>
+        <td>{{ c.vencimento }}</td>
+        <td>{{ c.valor_total }}</td>
+        <td>{{ c.total_recebido }}</td>
+        <td>{{ c.saldo }}</td>
+
+        <!-- NOVO: Data por linha -->
+        <td>
+            <input type="date"
+            name="data_recebimento_{{ c.pk }}"
+            value="{{ today|date:'Y-m-d' }}">
+
+
+        <!-- NOVO: Valor recebido por linha -->
+        <td>
+            <input type="number"
+                   step="0.01"
+                   name="valor_recebido_{{ c.pk }}"
+                   value="{{ c.saldo }}">
+        </td>
+
+        <td>{{ c.situacao }}</td>
+
+        <td>
+        {% for r in c.recebimentos.all %}
+            {% if r.valor_recebido > 0 and r.tipo_lancamento == "NORMAL" %}
+                <a href="#"
+                class="btn-estornar"
+                data-id="{{ r.id }}"
+                data-valor="{{ r.valor_recebido }}">
+                Estornar (R$ {{ r.valor_recebido }})
+                </a><br>
+            {% endif %}
+        {% empty %}
+            Nenhum recebimento
+        {% endfor %}
+        </td>
+        
+
+    </tr>
+    {% endfor %}
+    <div class="pagination">
+
+    {% if contas.has_previous %}
+        <a href="?page={{ contas.previous_page_number }}{% if filtros.data_inicial %}&data_inicial={{ filtros.data_inicial }}{% endif %}{% if filtros.data_final %}&data_final={{ filtros.data_final }}{% endif %}{% if filtros.cliente %}&cliente={{ filtros.cliente }}{% endif %}{% if filtros.situacao %}&situacao={{ filtros.situacao }}{% endif %}">
+            « Anterior
+        </a>
+    {% endif %}
+
+    <span>Página {{ contas.number }} de {{ contas.paginator.num_pages }}</span>
+
+    {% if contas.has_next %}
+        <a href="?page={{ contas.next_page_number }}{% if filtros.data_inicial %}&data_inicial={{ filtros.data_inicial }}{% endif %}{% if filtros.data_final %}&data_final={{ filtros.data_final }}{% endif %}{% if filtros.cliente %}&cliente={{ filtros.cliente }}{% endif %}{% if filtros.situacao %}&situacao={{ filtros.situacao }}{% endif %}">
+            Próxima »
+        </a>
+    {% endif %}
+
+</div>
+
+</table>
+
+    
+</form>
+{% if messages %}
+    {% for message in messages %}
+        <p style="color: green;">{{ message }}</p>
+    {% endfor %}
+{% endif %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // Seleciona todos links de estorno
+    document.querySelectorAll(".btn-estornar").forEach(btn => {
+
+        btn.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            const id = this.dataset.id;
+            const valor = this.dataset.valor;
+
+            // Primeiro confirma o estorno
+            if (!confirm(`Confirma estornar o recebimento de R$ ${valor}?`)) {
+                return;
+            }
+
+            // Pede a descrição
+            let descricao = prompt("Informe o motivo do estorno:");
+
+            // Se cancelou ou deixou vazio, não faz nada
+            if (descricao === null || descricao.trim() === "") {
+                alert("O estorno foi cancelado. A descrição é obrigatória.");
+                return;
+            }
+
+            // Cria um formulário invisível para enviar POST ao Django
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.action = `/financeiro/estornar/${id}/`; // URL do estorno
+
+            // Adiciona CSRF
+            const csrf = document.querySelector("[name=csrfmiddlewaretoken]").cloneNode(true);
+            form.appendChild(csrf);
+
+            // Campo descrição
+            const inputDesc = document.createElement("input");
+            inputDesc.type = "hidden";
+            inputDesc.name = "observacao";
+            inputDesc.value = descricao;
+            form.appendChild(inputDesc);
+
+            document.body.appendChild(form);
+            form.submit();
+        });
+
+    });
+
+});
+document.addEventListener("DOMContentLoaded", function () {
+    const inputGlobal = document.getElementById("data_global");
+
+    inputGlobal.addEventListener("change", function () {
+        const novaData = this.value;
+
+        // pega todos os inputs de data das linhas
+        const datasLinha = document.querySelectorAll("input[name^='data_recebimento_']");
+
+        datasLinha.forEach(input => {
+            input.value = novaData;
+        });
+    });
+});
+</script>
+
+{% endblock content %}

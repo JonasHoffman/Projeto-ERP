@@ -1,0 +1,89 @@
+{% extends "templates/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="content-cadastro">
+
+    <div class="content-content-cadastro">
+
+        <div class="content-content-content-cadastro">
+
+            <h2>Cadastrar Conta a Pagar</h2>
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <fieldset>
+                    <legend>Dados da Conta</legend>
+
+                    <div class="form-grid">
+
+                        <div class="linha">
+                            <label for="{{ form.cod_cliente.id_for_label }}">Fornecedor</label>
+                            {{ form.cod_cliente }}
+                            {{ form.cod_cliente.errors }}
+                        </div>
+
+                        <div class="linha">
+                            <label for="{{ form.cod_banco.id_for_label }}">Banco</label>
+                            {{ form.cod_banco }}
+                            {{ form.cod_banco.errors }}
+                        </div>
+
+                        <div class="linha">
+                            <label for="{{ form.forma_pagamento.id_for_label }}">Forma de Pagamento</label>
+                            {{ form.forma_pagamento }}
+                            {{ form.forma_pagamento.errors }}
+                        </div>
+
+                        <div class="linha">
+                            <label for="{{ form.tipo_conta.id_for_label }}">Tipo de Conta</label>
+                            {{ form.tipo_conta }}
+                            {{ form.tipo_conta.errors }}
+                        </div>
+
+                        <div class="linha">
+                            <label for="{{ form.situacao.id_for_label }}">Situação</label>
+                            {{ form.situacao }}
+                            {{ form.situacao.errors }}
+                        </div>
+
+                        <div class="linha">
+                            <label for="{{ form.dt_vencimento.id_for_label }}">Data de Vencimento</label>
+                            {{ form.dt_vencimento }}
+                            {{ form.dt_vencimento.errors }}
+                        </div>
+
+                        <div class="linha">
+                            <label for="{{ form.total_titulo.id_for_label }}">Valor Total</label>
+                            {{ form.total_titulo }}
+                            {{ form.total_titulo.errors }}
+                        </div>
+
+                        <div class="linha">
+                            <label for="{{ form.multa.id_for_label }}">Multa</label>
+                            {{ form.multa }}
+                            {{ form.multa.errors }}
+                        </div>
+
+                    </div>
+                </fieldset>
+
+                <button type="submit">Salvar Conta</button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

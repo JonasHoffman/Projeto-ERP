@@ -73,7 +73,7 @@ a {
   justify-content: space-between;
   height: 100%;
   border: 15px solid #fcf7f7;
-  padding: 10px;
+  
 
 }
 
@@ -160,7 +160,7 @@ button:disabled,
 
 table {
   table-layout: fixed;
-  width: 800px;
+  width: 100%;
   border-collapse: collapse;
   overflow: hidden;
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
@@ -737,7 +737,7 @@ select:focus {
     justify-content: center; /* centraliza horizontalmente */
     align-items: flex-start; /* ou center, se quiser centralizar vertical também */
     min-height: 100%;
-    padding: 20px;
+    
     width: 100%;
     box-sizing: border-box;
 }
@@ -773,4 +773,38 @@ select:focus {
 
 .form-fields{
     width: 100%;
+}
+
+/* LISTAGEM ERP */
+.content-listagem {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Status visual */
+.status {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status.recebido {
+    background: #e7f6ec;
+    color: #2f8f4e;
+}
+
+.status.parcial {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status.atrasada {
+    background: #fdeaea;
+    color: #c0392b;
+}
+
+.status.aberta {
+    background: #e3e3ff;
+    color: #3f4a75;
 }

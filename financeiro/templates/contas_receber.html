@@ -1,0 +1,59 @@
+{% extends "templates/base_cadastro.html" %}
+
+{% block content %}
+<h2>Contas a Receber</h2>
+
+<div class="content-listagem">
+  <table class="table-list">
+    <thead>
+      <tr>
+        <th>Pedido</th>
+        <th>Cliente</th>
+        <th>Valor</th>
+        <th>Vencimento</th>
+        <th>Situação</th>
+        <th>Boleto</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for c in contas %}
+      <tr>
+        <td>{{ c.pedido_numero|default:"—" }}</td>
+
+        <td>
+          {% if c.cliente %}
+            {{ c.cliente.nome }}
+          {% else %}
+            —
+          {% endif %}
+        </td>
+
+        <td>R$ {{ c.valor_total }}</td>
+        <td>{{ c.vencimento|date:"d/m/Y" }}</td>
+
+        <td>
+          {% if c.situacao == "Recebida" %}
+            <span class="status recebido">Recebida</span>
+          {% elif c.situacao == "Parcial" %}
+            <span class="status parcial">Parcial</span>
+          {% elif c.situacao == "Atrasada" %}
+            <span class="status atrasada">Atrasada</span>
+          {% else %}
+            <span class="status aberta">Aberta</span>
+          {% endif %}
+        </td>
+
+        <td>
+          {% if c.boleto_url %}
+            <a href="{{ c.boleto_url }}" target="_blank">Ver boleto</a>
+          {% else %}
+            —
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

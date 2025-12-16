@@ -5,10 +5,14 @@
 
 <h2>Cadastrar Fornecedor</h2>
 
+<!-- ERROS GERAIS DO FORM -->
+{% if form.non_field_errors %}
+<div class="alert alert-danger">
+    {{ form.non_field_errors }}
+</div>
+{% endif %}
 
 <script src="{% static 'javascript/cadastro_fornecedor.js' %}"></script>
-
-
 
 <form method="POST">
     {% csrf_token %}
@@ -24,56 +28,76 @@
             <div class="linha">
                 <label>Nome fantasia</label>
                 {{ form.nome_fantasia }}
+                {% if form.nome_fantasia.errors %}
+                    <div class="text-danger small">{{ form.nome_fantasia.errors }}</div>
+                {% endif %}
             </div>
 
             <div class="linha">
                 <label>Razão social</label>
                 {{ form.razao_social }}
+                {% if form.razao_social.errors %}
+                    <div class="text-danger small">{{ form.razao_social.errors }}</div>
+                {% endif %}
             </div>
 
             <div class="linha">
                 <label>CNPJ</label>
                 {{ form.cnpj }}
+                {% if form.cnpj.errors %}
+                    <div class="text-danger small">{{ form.cnpj.errors }}</div>
+                {% endif %}
             </div>
 
             <div class="linha">
                 <label>Inscrição estadual</label>
                 {{ form.inscricao_estadual }}
+                {% if form.inscricao_estadual.errors %}
+                    <div class="text-danger small">{{ form.inscricao_estadual.errors }}</div>
+                {% endif %}
             </div>
 
             <div class="linha">
                 <label>Inscrição municipal</label>
                 {{ form.inscricao_municipal }}
+                {% if form.inscricao_municipal.errors %}
+                    <div class="text-danger small">{{ form.inscricao_municipal.errors }}</div>
+                {% endif %}
             </div>
 
             <div class="linha">
                 <label>Email</label>
                 {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="text-danger small">{{ form.email.errors }}</div>
+                {% endif %}
             </div>
 
-            <!-- =============================== -->
-            <!-- NOVOS CAMPOS: TRANSPORTADORA E BANCO -->
-            <!-- =============================== -->
-
+            <!-- TRANSPORTADORA -->
             <div class="linha">
                 <label>Transportadora</label>
                 <div class="input-com-lupa">
-                    <input type="text" id="transportadora_input" name="transportadora_nome" >
+                    <input type="text" id="transportadora_input" name="transportadora_nome">
                     <input type="hidden" id="transportadora_id" name="transportadora">
                     <button type="button" class="btn-lupa"
-                    id="btn-transportadora"
-                    data-url="{% url 'busca:busca_transportadoras' %}">🔍</button>
+                        id="btn-transportadora"
+                        data-url="{% url 'busca:busca_transportadoras' %}">
+                        🔍
+                    </button>
                 </div>
             </div>
 
+            <!-- BANCO -->
             <div class="linha">
                 <label>Banco</label>
                 <div class="input-com-lupa">
-                    <input type="text" id="banco_input" name="banco_nome" >
+                    <input type="text" id="banco_input" name="banco_nome">
                     <input type="hidden" id="banco_id" name="banco">
                     <button type="button" class="btn-lupa"
-                    id="btn-banco"
-                    data-url="{% url 'busca:busca_bancos' %}">🔍</button>
+                        id="btn-banco"
+                        data-url="{% url 'busca:busca_bancos' %}">
+                        🔍
+                    </button>
                 </div>
             </div>
 
@@ -87,40 +111,65 @@
     <!-- =============================== -->
     <fieldset>
         <legend>Endereços</legend>
+
         {{ endereco_fs.management_form }}
+
+        {% for error in endereco_fs.non_form_errors %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endfor %}
 
         <div id="enderecos-container">
             {% for form in endereco_fs %}
             <div class="end-bloco form-grid">
 
+                {{ form.id }}
+
                 <div class="linha">
                     <label>Logradouro</label>
                     {{ form.logradouro }}
+                    {% if form.logradouro.errors %}
+                        <div class="text-danger small">{{ form.logradouro.errors }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="linha">
                     <label>Número</label>
                     {{ form.numero }}
+                    {% if form.numero.errors %}
+                        <div class="text-danger small">{{ form.numero.errors }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="linha">
                     <label>Bairro</label>
                     {{ form.bairro }}
+                    {% if form.bairro.errors %}
+                        <div class="text-danger small">{{ form.bairro.errors }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="linha">
                     <label>Cidade</label>
                     {{ form.cidade }}
+                    {% if form.cidade.errors %}
+                        <div class="text-danger small">{{ form.cidade.errors }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="linha">
                     <label>Estado</label>
                     {{ form.estado }}
+                    {% if form.estado.errors %}
+                        <div class="text-danger small">{{ form.estado.errors }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="linha">
                     <label>CEP</label>
                     {{ form.cep }}
+                    {% if form.cep.errors %}
+                        <div class="text-danger small">{{ form.cep.errors }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="linha delete-box">
@@ -132,47 +181,6 @@
             <hr>
             {% endfor %}
         </div>
-
-        <!-- Template Dinâmico -->
-        <template id="endereco-template">
-            <div class="end-bloco form-grid">
-                <div class="linha">
-                    <label>Logradouro</label>
-                    <input type="text" name="end-__index__-logradouro">
-                </div>
-
-                <div class="linha">
-                    <label>Número</label>
-                    <input type="text" name="end-__index__-numero">
-                </div>
-
-                <div class="linha">
-                    <label>Bairro</label>
-                    <input type="text" name="end-__index__-bairro">
-                </div>
-
-                <div class="linha">
-                    <label>Cidade</label>
-                    <input type="text" name="end-__index__-cidade">
-                </div>
-
-                <div class="linha">
-                    <label>Estado</label>
-                    <input type="text" name="end-__index__-estado">
-                </div>
-
-                <div class="linha">
-                    <label>CEP</label>
-                    <input type="text" name="end-__index__-cep">
-                </div>
-
-                <div class="linha delete-box">
-                    <label>Excluir</label>
-                    <input type="checkbox" name="end-__index__-DELETE">
-                </div>
-            </div>
-            <hr>
-        </template>
 
         <button type="button" id="add-endereco">+ Adicionar Endereço</button>
     </fieldset>
@@ -184,30 +192,58 @@
     <!-- =============================== -->
     <fieldset>
         <legend>Contatos</legend>
+
         {{ contato_fs.management_form }}
+
+        {% for error in contato_fs.non_form_errors %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endfor %}
 
         <div id="contatos-container">
             {% for form in contato_fs %}
             <div class="cont-bloco form-grid">
 
+                {{ form.id }}
+
                 <div class="linha">
                     <label>Nome</label>
                     {{ form.nome }}
+                    {% if form.nome.errors %}
+                        <div class="text-danger small">{{ form.nome.errors }}</div>
+                    {% endif %}
                 </div>
+
+                <div class="linha">
+                    <label>CPF</label>
+                    {{ form.cpf }}
+                    {% if form.cpf.errors %}
+                        <div class="text-danger small">{{ form.cpf.errors }}</div>
+                    {% endif %}
+                </div>
+
 
                 <div class="linha">
                     <label>Telefone</label>
                     {{ form.telefone }}
+                    {% if form.telefone.errors %}
+                        <div class="text-danger small">{{ form.telefone.errors }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="linha">
                     <label>Email</label>
                     {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="text-danger small">{{ form.email.errors }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="linha">
                     <label>Cargo</label>
                     {{ form.cargo }}
+                    {% if form.cargo.errors %}
+                        <div class="text-danger small">{{ form.cargo.errors }}</div>
+                    {% endif %}
                 </div>
 
                 <div class="linha delete-box">
@@ -220,49 +256,25 @@
             {% endfor %}
         </div>
 
-        <!-- Template Dinâmico -->
-        <template id="contato-template">
-            <div class="cont-bloco form-grid">
-
-                <div class="linha">
-                    <label>Nome</label>
-                    <input type="text" name="cont-__index__-nome">
-                </div>
-
-                <div class="linha">
-                    <label>Telefone</label>
-                    <input type="text" name="cont-__index__-telefone">
-                </div>
-
-                <div class="linha">
-                    <label>Email</label>
-                    <input type="email" name="cont-__index__-email">
-                </div>
-
-                <div class="linha">
-                    <label>Cargo</label>
-                    <input type="text" name="cont-__index__-cargo">
-                </div>
-
-                <div class="linha delete-box">
-                    <label>Excluir</label>
-                    <input type="checkbox" name="cont-__index__-DELETE">
-                </div>
-
-            </div>
-            <hr>
-        </template>
-
         <button type="button" id="add-contato">+ Adicionar Contato</button>
     </fieldset>
 
-    <br><br>
+    <!-- =============================== -->
+    <!-- DEBUG (REMOVER DEPOIS) -->
+    <!-- =============================== -->
+    <pre>
+FORM:
+{{ form.errors }}
+
+ENDEREÇOS:
+{{ endereco_fs.errors }}
+
+CONTATOS:
+{{ contato_fs.errors }}
+    </pre>
+
+    <br>
     <button type="submit">Salvar</button>
 </form>
-
-
-<!-- =============================== -->
-<!-- JAVASCRIPT -->
-
 
 {% endblock %}

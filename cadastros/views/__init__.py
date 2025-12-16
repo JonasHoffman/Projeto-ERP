@@ -5,3 +5,6 @@ from .cadastrar_forma_pagamento import *
 from .cadastrar_tabela_preco import * 
 from .cadastrar_tipo_cliente import * 
 from .cadastrar_condicao_pagamento import *
+from .cadastrar_transportadora import *
+from .cadastrar_banco import *
+from .cadastrar_conta_financeira import *
