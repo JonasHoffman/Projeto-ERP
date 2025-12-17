@@ -35,7 +35,12 @@ class ContaReceber(models.Model):
     boleto_url = models.URLField(blank=True, null=True)
     criado_por = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
     charge_id = models.CharField(max_length=40, blank=True, null=True)
+    data_emissao = models.DateField(default=timezone.now)
+    atualizado_em = models.DateTimeField(auto_now=True)
     
+    class Meta:
+        unique_together = ('pedido_numero', 'parcela')
+
     def __str__(self):
         return f"Receber {self.titulo} - {self.cliente}"
 
@@ -119,7 +124,10 @@ class ContasPagar(models.Model):
     total_titulo = models.DecimalField("Valor total", max_digits=10, decimal_places=2)
     multa = models.DecimalField("Multa", max_digits=10, decimal_places=2, default=0)
     criado_por = models.ForeignKey(User, on_delete=models.CASCADE, editable=False,null=True,blank=True)
+    data_emissao = models.DateField(default=timezone.now)
+    atualizado_em = models.DateTimeField(auto_now=True)
 
+    
     def __str__(self):
         return f"Título {self.titulo} - {self.cod_cliente}"
 

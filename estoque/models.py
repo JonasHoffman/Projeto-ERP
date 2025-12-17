@@ -1,9 +1,29 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.apps import apps
+from cadastros.models import ProdutoBase,Fornecedor,Deposito
 
 
 # Create your models here.
+
+class ProdutoEntrada(models.Model):
+    produto = models.ForeignKey(ProdutoBase, on_delete=models.CASCADE)
+    fornecedor = models.ForeignKey(Fornecedor, on_delete=models.SET_NULL, null=True, blank=True)
+    fornecedor_nome = models.CharField(max_length=25)
+    quantidade = models.DecimalField(max_digits=10, decimal_places=2)
+    custo_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+    custo_total = models.DecimalField(max_digits=10, decimal_places=2)
+    lote = models.CharField(max_length=25, unique=False)
+    deposito = models.ForeignKey(Deposito, on_delete=models.SET_NULL, null=True, blank=True)
+    data_entrada = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f"{self.produto.codigo} - {self.lote}"
+    
+    def save(self,*args,**kwargs):
+        if self.fornecedor:
+            self.fornecedor_nome = self.fornecedor.nome
+        super().save(*args,**kwargs)
+        
 class ProdutoEntradaTemp(models.Model):
     produto = models.ForeignKey('cadastros.ProdutoBase', on_delete=models.CASCADE)
     fornecedor = models.ForeignKey('cadastros.Fornecedor', on_delete=models.CASCADE)

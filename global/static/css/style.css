@@ -808,3 +808,107 @@ select:focus {
     background: #e3e3ff;
     color: #3f4a75;
 }
+
+
+
+/* ====== ESTÉTICA GERAL ====== */
+h2, h3, h4 {
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+/* ====== CARD DO FILTRO ====== */
+form {
+    background: #ffffff;
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+    border-left: 4px solid #0d6efd;
+    transition: 0.3s ease;
+}
+
+form:hover {
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+/* ====== INPUTS ====== */
+form input[type="date"] {
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+}
+
+/* ====== TABELA ====== */
+.table {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+}
+
+.table thead {
+    background: #f8f9fa;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.table tbody tr {
+    transition: 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background: #eef2f7 !important;
+}
+
+/* ====== CORES VALORES ====== */
+.text-success {
+    color: #0f9d58 !important;   /* Verde Google */
+    font-weight: 700;
+}
+
+.text-danger {
+    color: #d93025 !important;   /* Vermelho Google */
+    font-weight: 700;
+}
+
+/* ====== VALORES ====== */
+.valor-positivo {
+    color: #0f9d58 !important;
+    font-weight: bold;
+}
+
+.valor-negativo {
+    color: #d93025 !important;
+    font-weight: bold;
+}
+
+/* ====== SALDO FINAL ====== */
+.saldo-box {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+    border-left: 4px solid #6c757d;
+    margin-top: 20px;
+}
+
+.saldo-positivo {
+    color: #0f9d58 !important;
+    font-weight: 700;
+}
+
+.saldo-negativo {
+    color: #d93025 !important;
+    font-weight: 700;
+}
+
+/* ====== RESPONSIVIDADE ====== */
+@media(max-width: 768px) {
+    form {
+        padding: 14px;
+    }
+
+    .table {
+        font-size: 14px;
+    }
+}

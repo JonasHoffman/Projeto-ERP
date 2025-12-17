@@ -1,0 +1,98 @@
+{% extends "templates/base_2.html" %}
+{% load static %}
+
+{% block content %}
+
+<h2>Upload NFe (XML)</h2>
+
+<form method="post" action="{% url 'estoque:receber_nfe' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label>Arquivo XML da NFe:</label><br>
+    <input type="file" name="xml_file" accept=".xml" required>
+    <br><br>
+
+    <button type="submit" class="btn btn-success">
+        Importar XML
+    </button>
+</form>
+
+<hr>
+
+<h2>Consulta de Notas por CNPJ</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <label>CNPJ da empresa:</label><br>
+    <input type="text" name="cnpj" placeholder="Digite o CNPJ" style="width: 250px;">
+    <br><br>
+
+    <label>Certificado (fake):</label><br>
+    <input type="text" name="certificado" placeholder="Arquivo do certificado (fake)">
+    <br><br>
+
+    <label>Senha do certificado (fake):</label><br>
+    <input type="password" name="senha" placeholder="Senha">
+    <br><br>
+
+    <button type="submit">Buscar Notas</button>
+</form>
+
+<hr>
+
+{% if erro %}
+    <p style="color: red;">{{ erro }}</p>
+{% endif %}
+
+{% if notas %}
+    <h3>Notas encontradas:</h3>
+
+    {% for nota in notas %}
+        <div style="border:1px solid #ccc; padding:10px; margin-bottom:15px;">
+            <strong>Chave:</strong> {{ nota.chave }}<br>
+            <strong>Emitente:</strong> {{ nota.emitente }}<br>
+            <strong>Número:</strong> {{ nota.numero }} - Série: {{ nota.serie }}<br>
+            <strong>Data:</strong> {{ nota.data_emissao }}<br>
+            <strong>Total:</strong> R$ {{ nota.valor_total }}<br>
+
+            <h4>Itens da nota</h4>
+            <table border="1" cellpadding="4" cellspacing="0">
+                <tr>
+                    <th>Item</th>
+                    <th>Código</th>
+                    <th>Descrição</th>
+                    <th>NCM</th>
+                    <th>CFOP</th>
+                    <th>Qtd</th>
+                    <th>Valor Unit.</th>
+                    <th>Total</th>
+                </tr>
+
+                {% for item in nota.itens %}
+                <tr>
+                    <td>{{ item.nItem }}</td>
+                    <td>{{ item.codigo }}</td>
+                    <td>{{ item.descricao }}</td>
+                    <td>{{ item.ncm }}</td>
+                    <td>{{ item.cfop }}</td>
+                    <td>{{ item.quantidade }}</td>
+                    <td>{{ item.valor_unitario }}</td>
+                    <td>{{ item.valor_total }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <br>
+
+            <form action="{% url 'estoque:receber_nfe' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="xml_gerado" value="{{ nota.xml_fake }}">
+                <button type="submit" class="btn btn-primary">Receber NF</button>
+            </form>
+        </div>
+    {% endfor %}
+{% endif %}
+
+
+{% endblock %}
