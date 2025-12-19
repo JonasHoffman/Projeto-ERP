@@ -1,9 +1,28 @@
 from django import forms
 from django.forms import modelformset_factory
 from cadastros.models import Fornecedor, EnderecoFornecedor, ContatoFornecedor,Cliente,EnderecoCliente,Contato,RegraPreco,ESTADOS_BRASIL,DescontoCliente,Transportadora
-from cadastros.models import Banco, ContaFinanceira
+from cadastros.models import Banco, ContaFinanceira,ProdutoBase,GrupoProduto
 from django.forms import inlineformset_factory
 
+
+class ProdutoBaseForm(forms.ModelForm):
+    class Meta:
+        model = ProdutoBase
+        fields = [
+        "codigo",
+        "nome",
+        "descricao",
+        "ncm",
+        "unidade",
+        "grupo",
+        "preco_base",
+        "ativo",
+        ]
+
+
+widgets = {
+"descricao": forms.Textarea(attrs={"rows": 3}),
+}
 class FornecedorForm(forms.ModelForm):
     class Meta:
         model = Fornecedor
@@ -197,4 +216,14 @@ class ContaFinanceiraForm(forms.ModelForm):
             }),
             'tipo': forms.Select(),
             'banco': forms.Select(),
+        }
+
+class GrupoProdutoForm(forms.ModelForm):
+    class Meta:
+        model = GrupoProduto
+        fields = ['codigo', 'nome', 'ativo']
+        widgets = {
+            'codigo': forms.TextInput(attrs={'class': 'form-control'}),
+            'nome': forms.TextInput(attrs={'class': 'form-control'}),
+            'ativo': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }

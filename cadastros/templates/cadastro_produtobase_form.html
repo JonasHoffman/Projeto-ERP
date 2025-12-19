@@ -1,0 +1,78 @@
+<!-- templates/produtos/form_produto_base.html -->
+{% extends "templates/base_cadastro.html" %}
+
+
+{% block content %}
+
+
+    <h2>{{ titulo }}</h2>
+
+
+    <form method="post">
+    {% csrf_token %}
+
+
+        <div class="form-grid">
+
+
+            <div>
+            <label>Código</label>
+            {{ form.codigo }}
+            </div>
+
+
+            <div>
+            <label>Nome</label>
+            {{ form.nome }}
+            </div>
+
+
+            <div>
+            <label>NCM</label>
+            {{ form.ncm }}
+            </div>
+
+
+            <div>
+            <label>Unidade</label>
+            {{ form.unidade }}
+            </div>
+
+
+            <div>
+            <label>Grupo</label>
+            {{ form.grupo }}
+            </div>
+
+
+            <div>
+            <label>Preço Base</label>
+            {{ form.preco_base }}
+            </div>
+
+
+            <div class="full">
+            <label>Descrição</label>
+            {{ form.descricao }}
+            </div>
+
+
+            <div>
+            <label>{{ form.ativo }} Produto ativo</label>
+            </div>
+
+
+        </div>
+
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Salvar</button>
+            <a href="{% url 'cadastros:listar_produtos_base' %}" class="btn-secondary">Voltar</a>
+        </div>
+
+
+    </form>
+
+
+
+{% endblock %}

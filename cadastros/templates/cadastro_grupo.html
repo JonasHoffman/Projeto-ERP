@@ -1,0 +1,45 @@
+{% extends "templates/base_cadastro.html" %}
+{% block content %}
+
+<div class="container">
+
+    <div class="d-flex justify-content-between mb-3">
+        <h3>Grupo de Produtos</h3>
+        <a href="{% url 'cadastros:grupo_produto_criar' %}" class="btn btn-success">
+            Novo Grupo
+        </a>
+    </div>
+
+    <table class="table table-bordered table-sm">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nome</th>
+                <th>Ativo</th>
+                <th width="120">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for grupo in grupos %}
+            <tr>
+                <td>{{ grupo.codigo }}</td>
+                <td>{{ grupo.nome }}</td>
+                <td>{{ grupo.ativo|yesno:"Sim,Não" }}</td>
+                <td>
+                    <a href="{% url 'cadastros:grupo_produto_editar' grupo.id %}"
+                       class="btn btn-sm btn-primary">
+                        Editar
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">Nenhum grupo cadastrado</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

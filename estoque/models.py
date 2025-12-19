@@ -56,9 +56,33 @@ class MovEstoque(models.Model):
     data = models.DateTimeField(auto_now_add=True)
 
 class ProdutoFornecedor(models.Model):
-    cnpj_fornecedor = models.ForeignKey('cadastros.Fornecedor',on_delete=models.SET_NULL,blank=True,null=True)
-    nome_produto = models.CharField(max_length=50) 
-    codigo_produto = models.CharField(max_length=50)  
-    produto_estoque = models.ForeignKey('cadastros.ProdutoBase',on_delete=models.SET_NULL,blank=True,null=True)
+    fornecedor = models.ForeignKey(Fornecedor, on_delete=models.PROTECT, null=True,default=True)
+    produto_estoque = models.ForeignKey(ProdutoBase, on_delete=models.PROTECT)
+    codigo_produto = models.CharField(max_length=50)
+
+    class Meta:
+        unique_together = ('fornecedor', 'codigo_produto')
+
+    def __str__(self):
+        return f"{self.fornecedor.nome_fantasia} - {self.codigo_produto}"
 
 
+class NotaFiscalEntrada(models.Model):
+    fornecedor = models.ForeignKey(Fornecedor, on_delete=models.PROTECT)
+    numero = models.CharField(max_length=20)
+    serie = models.CharField(max_length=10, blank=True, null=True)
+    chave = models.CharField(max_length=60, unique=False)
+    data_emissao = models.DateField(blank=True, null=True)
+
+    valor_total = models.DecimalField(max_digits=12, decimal_places=2)
+    valor_produtos = models.DecimalField(max_digits=12, decimal_places=2)
+
+    xml = models.TextField()  # opcional
+    pdf = models.FileField(upload_to="nfe_pdfs/", blank=True, null=True)
+
+    criado_em = models.DateTimeField(auto_now_add=True)
+    importado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return f"NF {self.numero} - {self.fornecedor.nome}"
+    

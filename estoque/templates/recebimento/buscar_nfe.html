@@ -21,7 +21,7 @@
 
 <h2>Consulta de Notas por CNPJ</h2>
 
-<form method="post">
+<form method="post" action="{% url 'estoque:consultar_nfe' %}">
     {% csrf_token %}
 
     <label>CNPJ da empresa:</label><br>

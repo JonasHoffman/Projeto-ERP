@@ -1,0 +1,54 @@
+<!-- templates/produtos/listar_produtos_base.html -->
+{% extends "templates/base_2.html" %}
+
+
+{% block content %}
+    <div class="content-lista">
+
+
+        <div class="header-lista">
+            <h2>Produtos</h2>
+            <a href="{% url 'cadastros:cadastrar_produto_base' %}" class="btn-primary">Novo Produto</a>
+        </div>
+
+
+    <table class="table-erp">
+        <thead>
+            <tr>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>Unidade</th>
+            <th>Preço</th>
+            <th>Status</th>
+            <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produto in produtos %}
+                <tr>
+                    <td>{{ produto.codigo }}</td>
+                    <td>{{ produto.nome }}</td>
+                    <td>{{ produto.unidade }}</td>
+                    <td>R$ {{ produto.preco_base }}</td>
+                    <td>
+                    {% if produto.ativo %}
+                        Ativo
+                    {% else %}
+                        Inativo
+                    {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'cadastros:editar_produto_base' produto.id %}">Editar</a>
+                    </td>
+                </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">Nenhum produto cadastrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    </div>
+{% endblock %}

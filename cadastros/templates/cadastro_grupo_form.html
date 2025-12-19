@@ -1,0 +1,40 @@
+{% extends "templates/base_cadastro.html" %}
+{% block content %}
+
+<div class="container">
+
+    <h3>{{ titulo }}</h3>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="col-md-3">
+                <label>Código</label>
+                {{ form.codigo }}
+            </div>
+
+            <div class="col-md-7">
+                <label>Nome</label>
+                {{ form.nome }}
+            </div>
+
+            <div class="col-md-2 mt-4">
+                <div class="form-check">
+                    {{ form.ativo }}
+                    <label class="form-check-label">Ativo</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a href="{% url 'cadastros:grupo_produto_listar' %}" class="btn btn-secondary">
+                Voltar
+            </a>
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

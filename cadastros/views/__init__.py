@@ -8,3 +8,5 @@ from .cadastrar_condicao_pagamento import *
 from .cadastrar_transportadora import *
 from .cadastrar_banco import *
 from .cadastrar_conta_financeira import *
+from .cadastrar_produtobase import * 
+from .cadastrar_grupo import * 

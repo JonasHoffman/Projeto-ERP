@@ -4,7 +4,7 @@ from django.contrib.auth import views as auth_views
 
 app_name = 'cadastros'
 urlpatterns = [
-    path("cadastrar_fornecedor/", views.cadastrar_fornecedor, name="cadastrar_forncedor"),
+    path("cadastrar_fornecedor/", views.cadastrar_fornecedor, name="cadastrar_fornecedor"),
     path("clientes/novo/", views.cadastrar_cliente, name="cadastrar_cliente"),
     path('regras_preco/novo/', views.cadastrar_regra_preco, name='cadastrar_regra_preco'),
 
@@ -12,8 +12,10 @@ urlpatterns = [
     path('transportadoras/novo/', views.transportadora_create, name='transportadora_create'),
     path('transportadoras/<int:pk>/editar/', views.transportadora_update, name='transportadora_update'),
 
-
-    # Tipo Cliente
+    path("produtos/", views.listar_produtos_base, name="listar_produtos_base"),
+    path("produtos/novo/", views.cadastrar_produto_base, name="cadastrar_produto_base"),
+    path("produtos/<int:pk>/editar/", views.editar_produto_base, name="editar_produto_base"),
+        # Tipo Cliente
     path('tipo-cliente/', views.TipoClienteListView.as_view(), name='tipo_cliente_list'),
     path('tipo-cliente/novo/', views.TipoClienteCreateView.as_view(), name='tipo_cliente_create'),
     path('tipo-cliente/<int:pk>/editar/', views.TipoClienteUpdateView.as_view(), name='tipo_cliente_update'),
@@ -32,6 +34,10 @@ urlpatterns = [
     path('condicao-pagamento/', views.CondicaoPagamentoListView.as_view(), name='condicao_pagamento_list'),
     path('condicao-pagamento/novo/', views.CondicaoPagamentoCreateView.as_view(), name='condicao_pagamento_create'),
     path('condicao-pagamento/<int:pk>/editar/', views.CondicaoPagamentoUpdateView.as_view(), name='condicao_pagamento_update'),
+
+    path('grupos/', views.grupo_produto_listar, name='grupo_produto_listar'),
+    path('grupos/novo/', views.grupo_produto_criar, name='grupo_produto_criar'),
+    path('grupos/<int:pk>/editar/', views.grupo_produto_editar, name='grupo_produto_editar'),
 
     # =========================
     # BANCOS

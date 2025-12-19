@@ -6,7 +6,7 @@ app_name = 'estoque'
 urlpatterns = [
     path("buscar_nfe/", views.consultar_nfe_view, name="consultar_nfe"),
     path("receber_nfe/", views.receber_nfe, name="receber_nfe"),
-
+    path('relacionar_produto/', views.relacionar_produto, name='relacionar'),
 
     
 ]

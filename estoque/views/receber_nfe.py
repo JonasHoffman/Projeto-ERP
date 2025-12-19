@@ -5,7 +5,7 @@ import xmltodict
 from decimal import Decimal
 from estoque.models import ProdutoFornecedor, ProdutoBase, ProdutoEntradaTemp, Fornecedor, ProdutoEntrada
 from estoque.forms import UploadNFeForm
-
+from estoque.models import NotaFiscalEntrada
 
 def receber_nfe(request):
 
@@ -61,15 +61,15 @@ def receber_nfe(request):
                 print("Fornecedor NÃO encontrado.")
                 request.session['xml_temp'] = xml_temp
                 messages.info(request, 'Fornecedor não cadastrado.')
-                return redirect(f"{reverse('cadastro_fornecedor')}?next={request.path}")
+                return redirect(f"{reverse('cadastros:cadastrar_fornecedor')}?next={request.path}")
 
-            print("Fornecedor encontrado:", fornecedor.nome)
+            print("Fornecedor encontrado:", fornecedor.nome_fantasia)
             chave_acesso = nfe['@Id'].replace("NFe", "")  # vem como NFe3512... precisa remover prefixo
             valor_total_nf = Decimal(nfe['total']['ICMSTot']['vNF'])
             valor_produtos_nf = Decimal(nfe['total']['ICMSTot']['vProd'])
             data_emissao_nf = nfe['ide'].get('dEmi')
 
-            from estoque.models import NotaFiscalEntrada
+            
             print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',valor_total_nf)
             nf_registro, created = NotaFiscalEntrada.objects.get_or_create(
             chave=chave_acesso,   # chave é sempre única
@@ -80,7 +80,7 @@ def receber_nfe(request):
                 "valor_total": valor_total_nf,
                 "valor_produtos": valor_produtos_nf,
                 "xml": xml_temp,
-                "importado_por": request.user
+                "importado_por": request.user if request.user.is_authenticated else None
             }
             )
 
@@ -116,11 +116,12 @@ def receber_nfe(request):
                 print("Código fornecedor:", codigo_fornecedor)
                 print("Nome produto:", nome)
 
-                existe = ProdutoFornecedor.objects.filter(codigo_produto=codigo_fornecedor).exists()
+                correspondencia = ProdutoFornecedor.objects.filter(
+                    fornecedor=fornecedor,
+                    codigo_produto__iexact=str(codigo_fornecedor).strip()
+                ).first()
 
-                print("Encontrado no sistema?", existe)
-
-                if not existe:
+                if not correspondencia:
                     produtos_nao_relacionados.append({
                         "codigo": codigo_fornecedor,
                         "nome": nome
@@ -133,7 +134,7 @@ def receber_nfe(request):
                 print("REDIRECIONANDO para tela de relacionar.")
                 request.session['produtos_nao_encontrados'] = produtos_nao_relacionados
                 request.session['fornecedor_cnpj'] = cnpj
-                return redirect(f"{reverse('relacionar')}?next={request.path}")
+                return redirect(f"{reverse('estoque:relacionar')}?next={request.path}")
 
             # ----------------------------------------------------------
             # Todos os produtos relacionados → criar registro temporário
@@ -150,7 +151,10 @@ def receber_nfe(request):
 
                 print(f"Salvando item: {codigo} | Qtd: {quantidade} | VlrUnit: {valor_unitario}")
 
-                correspondencia = ProdutoFornecedor.objects.get(codigo_produto=codigo)
+                correspondencia = ProdutoFornecedor.objects.get(
+                    fornecedor=fornecedor,
+                    codigo_produto=codigo
+                )
                 produto_estoque = correspondencia.produto_estoque
 
                 ProdutoEntradaTemp.objects.create(
@@ -200,7 +204,7 @@ def receber_nfe(request):
             print("Tamanho:", len(xml_content))
 
             request.session['xml_temp'] = xml_content
-            return redirect("upload_nfe")
+            return redirect("estoque:receber_nfe")
 
     else:
         form = UploadNFeForm()

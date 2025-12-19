@@ -1,0 +1,93 @@
+{% extends "templates/base_2.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="lista-itens">
+
+    {% for item in nf %}
+        <a href="javascript:void(0)"
+           onclick="preencheQuantidade({{item.quantidade}}, '{{item.produto.nome}}', {{forloop.counter0}})"
+           data-index="{{forloop.counter0}}">
+            {{ item.produto.nome }}
+        </a>
+    {% endfor %}
+
+    <br><br>
+    <p id="NF">{{ numero_nf }}</p>
+
+</div>
+
+{% endblock content %}
+
+
+
+{% block content_2 %}
+
+<!-- 🆕 CAMPO DO PEDIDO + BOTÃO LUPA -->
+<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px;">
+
+    <label for="pedido_id">Pedido de Compra:</label>
+
+    <input 
+        type="text"
+        id="numero_pedido"
+        name="numero_pedido"
+        value="{% if pedido_encontrado %}{{ pedido_encontrado.id }}{% endif %}"
+        placeholder="{% if pedido_encontrado %}{{ pedido_encontrado.numero }}{% else %}Informe o pedido{% endif %}"
+        readonly
+    >
+
+    <!-- botão da lupa -->
+    <button 
+        type="button"
+        onclick="abrirListaPedidos()"
+        style="background: none; border: none; cursor: pointer; font-size: 22px;"
+        title="Buscar Pedido"
+    >
+        🔍
+    </button>
+
+</div>
+
+
+<!-- FORM ORIGINAL DOS LOTES -->
+{% for lote in form %}
+    {{ lote.label }}{{ lote }}
+{% endfor %}
+
+
+<label for="dep" id="label-select">Selecione o depósito</label>
+<select class="select-deposito">
+    {% for dep in depositos %}
+        <option id="dep">{{ dep.nome }}</option>
+    {% endfor %}
+</select>
+
+{{ nomes_itens|json_script:"nomes_itens_js" }}
+
+{% endblock content_2 %}
+
+
+
+{% block content_3 %}
+
+<!-- ÁREA ONDE A LISTA DE PEDIDOS SERÁ CARREGADA -->
+<div class="area-compras"></div>
+<div class="area-lote"></div>
+
+<button id="salvar" type="button">Salvar</button>
+<button id="enviar-form" type="submit" style="display:none">Gravar na base</button>
+
+<script src="{% static "/javascript/scripts3.js" %}"></script>
+
+
+<!-- JS LUPA -->
+<script>
+function abrirListaPedidos() {
+    // ABRE A LISTA DE PEDIDOS EM NOVA ABA
+    window.open("/estoque/pedidos-abertos/", "_blank");
+}
+</script>
+
+{% endblock content_3 %}

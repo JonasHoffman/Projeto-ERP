@@ -421,6 +421,9 @@ class ProdutoBase(models.Model):
     grupo = models.ForeignKey(GrupoProduto, on_delete=models.SET_NULL, null=True, blank=True)
     descricao = models.CharField(max_length=255, blank=True)
     preco_base = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    ativo = models.BooleanField(default=True,verbose_name="Ativo")
+    criado_em = models.DateTimeField(auto_now_add=True,null=True)
+    atualizado_em = models.DateTimeField(auto_now=True,null=True)
     def __str__(self):
         return self.codigo
     

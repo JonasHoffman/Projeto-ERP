@@ -912,3 +912,162 @@ form input[type="date"] {
         font-size: 14px;
     }
 }
+
+
+/* ===============================
+   RELACIONAR PRODUTOS NF – ERP
+   =============================== */
+
+.relacionar-nf-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 30px;
+    background: hsl(0, 12%, 92%);
+    box-sizing: border-box;
+}
+
+.relacionar-nf-card {
+    width: 100%;
+    max-width: 1100px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 25px 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Título */
+.relacionar-nf-card h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #55608f;
+    margin-bottom: 20px;
+}
+
+/* ===============================
+   TABELA
+   =============================== */
+
+.relacionar-nf-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.relacionar-nf-table thead {
+    background: #55608f;
+}
+
+.relacionar-nf-table thead th {
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    color: #ffffff;
+}
+
+.relacionar-nf-table tbody tr {
+    transition: background 0.2s;
+}
+
+.relacionar-nf-table tbody tr:nth-child(even) {
+    background: #f5f6fa;
+}
+
+.relacionar-nf-table tbody tr:hover {
+    background: #eef1f7;
+}
+
+.relacionar-nf-table td {
+    padding: 12px 14px;
+    font-size: 14px;
+    color: #333;
+    vertical-align: middle;
+}
+
+/* ===============================
+   INPUTS / SELECT
+   =============================== */
+
+.relacionar-nf-table select {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #ffffff;
+    transition: 0.2s;
+}
+
+.relacionar-nf-table select:focus {
+    border-color: #55608f;
+    box-shadow: 0 0 4px rgba(85, 96, 143, 0.35);
+}
+
+/* Campos somente leitura */
+.relacionar-nf-readonly {
+    font-weight: 500;
+    color: #555;
+}
+
+/* ===============================
+   BOTÃO
+   =============================== */
+
+.relacionar-nf-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.relacionar-nf-actions button {
+    width: 200px;
+    height: 42px;
+    background: #55608f;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.relacionar-nf-actions button:hover {
+    background: #3f4a75;
+}
+
+/* ===============================
+   RESPONSIVO
+   =============================== */
+
+@media (max-width: 768px) {
+    .relacionar-nf-card {
+        padding: 20px;
+    }
+
+    .relacionar-nf-table thead {
+        display: none;
+    }
+
+    .relacionar-nf-table,
+    .relacionar-nf-table tbody,
+    .relacionar-nf-table tr,
+    .relacionar-nf-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .relacionar-nf-table tr {
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px;
+    }
+
+    .relacionar-nf-table td {
+        padding: 8px 10px;
+    }
+}
