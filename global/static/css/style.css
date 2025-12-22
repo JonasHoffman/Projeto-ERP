@@ -1071,3 +1071,106 @@ form input[type="date"] {
         padding: 8px 10px;
     }
 }
+
+/* Container padrão já vem do layout */
+h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #55608f;
+    margin-bottom: 20px;
+}
+
+/* ALERTAS */
+.alert {
+    padding: 16px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    background: #ffffff;
+}
+
+/* ERRO */
+.alert-danger {
+    border-left: 4px solid #d93025;
+    background: #fdeaea;
+    color: #8a1f17;
+}
+
+.alert-danger strong {
+    font-weight: 700;
+}
+
+/* SUCESSO */
+.alert-success {
+    border-left: 4px solid #2f8f4e;
+    background: #e7f6ec;
+    color: #1f6f3d;
+}
+
+.alert-success strong {
+    font-weight: 700;
+}
+
+/* FIELDSET – DADOS / DETALHES */
+fieldset {
+    margin-top: 20px;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    padding: 15px 20px;
+    background: #fafafa;
+}
+
+fieldset legend {
+    font-size: 15px;
+    font-weight: 700;
+    color: #55608f;
+    padding: 0 8px;
+}
+
+/* LISTA DE DADOS (SUCESSO) */
+fieldset ul {
+    margin-top: 10px;
+}
+
+fieldset li {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+/* DETALHE TÉCNICO (ERRO) */
+pre {
+    margin-top: 10px;
+    padding: 14px;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #333;
+    max-height: 260px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+}
+
+/* AÇÃO (LINK / BOTÃO DE VOLTAR) */
+a {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 18px;
+    background: #55608f;
+    color: #ffffff;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+a:hover {
+    background: #3f4a75;
+}
+
+.label-quantidade-de-caixa{
+    display: block;
+}

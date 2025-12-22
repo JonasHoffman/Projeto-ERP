@@ -75,7 +75,7 @@ def gerar_xml_fake(nota):
             <indPres>1</indPres>
           </ide>
           <emit>
-            <CNPJ>123456780001</CNPJ>
+            <CNPJ>123451780011</CNPJ>
             <xNome>{nota['emitente']}</xNome>
             <enderEmit>
               <xLgr>Rua Teste</xLgr>
@@ -93,7 +93,7 @@ def gerar_xml_fake(nota):
             <CRT>3</CRT>
           </emit>
           <dest>
-            <CNPJ>111111110001</CNPJ>
+            <CNPJ>111114111201</CNPJ>
             <xNome>Cliente Exemplo LTDA</xNome>
             <enderDest>
               <xLgr>Av Central</xLgr>

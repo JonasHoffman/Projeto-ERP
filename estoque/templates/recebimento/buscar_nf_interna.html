@@ -1,0 +1,20 @@
+<h2>Procurar Notas Fiscais Pendentes</h2>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">Procurar</button>
+</form>
+
+{% if nfs %}
+  <h3>Notas Fiscais Encontradas:</h3>
+  <ul>
+    {% for nf in nfs %}
+      <li>
+        <a href="{% url 'estoque:recebimento_nf_interna' nf %}">{{ nf }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% elif request.method == 'POST' %}
+  <p>Nenhuma nota fiscal pendente encontrada.</p>
+{% endif %}

@@ -5,8 +5,11 @@ from cadastros.forms import (
     EnderecoFormSet,
     ContatoFormSet
 )
+from django.utils.http import url_has_allowed_host_and_scheme
 
 def cadastrar_fornecedor(request):
+    next_url = request.GET.get('next') or request.POST.get('next')
+
     if request.method == "POST":
         form = FornecedorForm(request.POST)
         endereco_fs = EnderecoFormSet(request.POST, prefix="end")
@@ -27,21 +30,23 @@ def cadastrar_fornecedor(request):
                 c.fornecedor = fornecedor
                 c.save()
 
+            # 🔁 REDIRECIONAMENTO INTELIGENTE
+            if next_url and url_has_allowed_host_and_scheme(
+                next_url,
+                allowed_hosts={request.get_host()}
+            ):
+                return redirect(next_url)
+
             return redirect('cadastros:conta_list')
 
     else:
         form = FornecedorForm()
-        endereco_fs = EnderecoFormSet(
-            prefix="end",
-            queryset=EnderecoFornecedor.objects.none()
-        )
-        contato_fs = ContatoFormSet(
-            prefix="cont",
-            queryset=ContatoFornecedor.objects.none()
-        )
+        endereco_fs = EnderecoFormSet(prefix="end")
+        contato_fs = ContatoFormSet(prefix="cont")
 
-    return render(request, "cadastro_fornecedor.html", {
-        "form": form,
-        "endereco_fs": endereco_fs,
-        "contato_fs": contato_fs,
+    return render(request, 'cadastro_fornecedor.html', {
+        'form': form,
+        'endereco_fs': endereco_fs,
+        'contato_fs': contato_fs,
+        'next': next_url,
     })

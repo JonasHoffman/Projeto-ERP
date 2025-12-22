@@ -1,0 +1,31 @@
+{% extends "templates/base.html" %}
+
+{% block content %}
+
+<h2>Nota Fiscal importada com sucesso</h2>
+
+<div class="alert alert-success">
+    <strong>Importação concluída.</strong>
+    <p>
+        A Nota Fiscal foi processada corretamente e os produtos foram
+        preparados para entrada no estoque.
+    </p>
+</div>
+
+{% if numero_nf %}
+    <fieldset>
+        <legend>Dados da Nota Fiscal</legend>
+
+        <ul>
+            <li><strong>Número da NF:</strong> {{ numero_nf }}</li>
+        </ul>
+    </fieldset>
+{% endif %}
+
+<div>
+    <a href="{% url 'estoque:receber_nfe' %}">
+        Importar outra Nota Fiscal
+    </a>
+</div>
+
+{% endblock %}

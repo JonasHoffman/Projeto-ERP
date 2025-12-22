@@ -178,7 +178,7 @@ def receber_nfe(request):
 
             print("Renderizando tela final...")
 
-            return render(request, 'recebimento/formset_padrao_cadastro.html', {
+            return render(request, 'recebimento/sucesso_buscar_nfe.html', {
                 'numero_nf': numero_nf
             })
 
@@ -186,7 +186,7 @@ def receber_nfe(request):
             print("\n##### ERRO AO PROCESSAR XML #####")
             print(str(e))
             request.session.pop('xml_temp', None)
-            return render(request, 'recebimento/formset_padrao_cadastro.html', {
+            return render(request, 'recebimento/erro_buscar_nfe', {
                 'erro': str(e)
             })
 

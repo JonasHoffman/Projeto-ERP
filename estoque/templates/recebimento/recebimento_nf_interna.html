@@ -1,4 +1,4 @@
-{% extends "templates/base_2.html" %}
+{% extends "templates/base_3.html" %}
 {% load static %}
 
 {% block content %}
@@ -51,18 +51,19 @@
 </div>
 
 
-<!-- FORM ORIGINAL DOS LOTES -->
-{% for lote in form %}
-    {{ lote.label }}{{ lote }}
-{% endfor %}
-
-
-<label for="dep" id="label-select">Selecione o depósito</label>
-<select class="select-deposito">
-    {% for dep in depositos %}
-        <option id="dep">{{ dep.nome }}</option>
+<div class='form-recebimento-interno'><!-- FORM ORIGINAL DOS LOTES -->
+    {% for lote in form %}
+        {{ lote.label }}{{ lote }}
     {% endfor %}
-</select>
+    <label for="dep" id="label-select">Selecione o depósito</label>
+    <select class="select-deposito">
+        {% for dep in depositos %}
+            <option id="dep">{{ dep.nome }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+
 
 {{ nomes_itens|json_script:"nomes_itens_js" }}
 
@@ -72,22 +73,22 @@
 
 {% block content_3 %}
 
-<!-- ÁREA ONDE A LISTA DE PEDIDOS SERÁ CARREGADA -->
-<div class="area-compras"></div>
-<div class="area-lote"></div>
+    <div class="gravar_recebimento_interno"><!-- ÁREA ONDE A LISTA DE PEDIDOS SERÁ CARREGADA -->
+        <div class="area-compras"></div>
+        <div class="area-lote"></div>
 
-<button id="salvar" type="button">Salvar</button>
-<button id="enviar-form" type="submit" style="display:none">Gravar na base</button>
+        <button id="salvar" type="button">Salvar</button>
+        <button id="enviar-form" type="submit" style="display:none">Gravar na base</button>
 
-<script src="{% static "/javascript/scripts3.js" %}"></script>
+        <script src="{% static "javascript/recebimento_nf_interna.js" %}"></script>
 
 
-<!-- JS LUPA -->
-<script>
-function abrirListaPedidos() {
-    // ABRE A LISTA DE PEDIDOS EM NOVA ABA
-    window.open("/estoque/pedidos-abertos/", "_blank");
-}
-</script>
-
+        <!-- JS LUPA -->
+        <script>
+        function abrirListaPedidos() {
+            // ABRE A LISTA DE PEDIDOS EM NOVA ABA
+            window.open("/estoque/pedidos-abertos/", "_blank");
+        }
+        </script>
+    </div>
 {% endblock content_3 %}

@@ -1,0 +1,28 @@
+{% extends "templates/base.html" %}
+
+{% block content %}
+
+<h2>Erro ao importar Nota Fiscal</h2>
+
+<div class="alert alert-danger">
+    <strong>Não foi possível importar a NF-e.</strong>
+    <p>
+        O sistema encontrou um problema ao processar o arquivo XML.
+        Verifique as informações ou entre em contato com o suporte.
+    </p>
+</div>
+
+{% if erro %}
+    <fieldset>
+        <legend>Detalhe do erro</legend>
+        <pre>{{ erro }}</pre>
+    </fieldset>
+{% endif %}
+
+<div>
+    <a href="{% url 'estoque:receber_nfe' %}">
+        Voltar para Importação de NF-e
+    </a>
+</div>
+
+{% endblock %}

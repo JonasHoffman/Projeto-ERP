@@ -30,3 +30,8 @@ class Relacionar_produto_FornecedorForm(forms.Form):
         queryset=ProdutoBase.objects.all(),
         label='Produto do sistema'
     )
+
+class recebimento_em_estoqueForm(forms.Form):
+    lote = forms.CharField(max_length=50)
+    nr_embalagem = forms.CharField(max_length=50)
+    quantidade_por_caixa = forms.CharField(max_length=50)
