@@ -1,20 +1,46 @@
+{% extends "templates/base.html" %}
+{% block content%}
 <h2>Procurar Notas Fiscais Pendentes</h2>
 
-<form method="post">
-  {% csrf_token %}
-  <button type="submit">Procurar</button>
-</form>
+<div class="content-cadastro">
+    <div class="content-content-cadastro">
+        <div class="content-content-content-cadastro">
 
-{% if nfs %}
-  <h3>Notas Fiscais Encontradas:</h3>
-  <ul>
-    {% for nf in nfs %}
-      <li>
-        <a href="{% url 'estoque:recebimento_nf_interna' nf %}">{{ nf }}
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
-{% elif request.method == 'POST' %}
-  <p>Nenhuma nota fiscal pendente encontrada.</p>
-{% endif %}
+            <!-- CARD / FORM -->
+            <form method="post" class="form-buscar">
+                {% csrf_token %}
+
+                <div class="div-btn-procurar">
+                    <button type="submit" class="btn-procurar">
+                        Procurar
+                    </button>
+                </div>
+            </form>
+
+            <!-- RESULTADOS -->
+            {% if nfs %}
+                <fieldset style="margin-top: 20px;">
+                    <legend>Notas Fiscais Encontradas</legend>
+
+                    <ul class="lista-itens">
+                        {% for nf in nfs %}
+                            <li style="margin-bottom: 10px;">
+                                <a href="{% url 'estoque:recebimento_nf_interna' nf %}">
+                                    {{ nf }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </fieldset>
+
+            {% elif request.method == 'POST' %}
+                <div class="alert alert-danger" style="margin-top: 20px;">
+                    Nenhuma nota fiscal pendente encontrada.
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock content%}

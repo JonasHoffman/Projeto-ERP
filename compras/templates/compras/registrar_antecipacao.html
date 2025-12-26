@@ -1,0 +1,12 @@
+{% extends "templates/base_2.html" %}
+{% load static %}
+
+{% block content %}
+<h2>Registrar Antecipação - Pedido {{ pedido.numero }}</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Salvar</button>
+</form>
+{% endblock %}

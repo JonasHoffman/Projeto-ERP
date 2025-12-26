@@ -1,0 +1,45 @@
+{% extends "templates/base_2.html" %}
+{% load static %}
+
+{% block content %}
+<h2>Novo Pedido de Compra</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <fieldset>
+        <legend>Dados do Pedido</legend>
+        {{ form.as_p }}
+    </fieldset>
+
+    <hr>
+
+    <h3>Itens do Pedido</h3>
+
+    {{ formset.management_form }}
+    
+    <table id="tabela-itens">
+        {% for form in formset %}
+        <tr class="item-form">
+            <td>{{ form.produto }}</td>
+            <td>{{ form.quantidade }}</td>
+            <td>{{ form.valor_unitario }}</td>
+            <td>
+                {% if form.instance.pk %}
+                    <label>Excluir? {{ form.DELETE }}</label>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        
+    </table>
+
+    <button type="button" id="add-item">+ Adicionar Item</button>
+
+    <hr>
+    
+    <button type="submit">Salvar Pedido</button>
+</form>
+
+<script src="{% static "/javascript/compras.js" %}"></script>
+{% endblock content %}

@@ -4,10 +4,10 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-
+from compras.models import PedidoCompra,PedidoCompraItem
 from estoque.models import (
     ProdutoEntradaTemp, ProdutoEntrada, Deposito, MovEstoque,
-    NotaFiscalEntrada,PedidoCompra,PedidoCompraItem
+    NotaFiscalEntrada
 )
 from estoque.forms import recebimento_em_estoqueForm
 from financeiro.models import ContasPagar   # <-- IMPORTANTE
@@ -125,7 +125,7 @@ def recebimento_nf_interna(request, numero_nf):
         ProdutoEntrada.objects.create(
             produto=produto,
             fornecedor=fornecedor,
-            fornecedor_nome=fornecedor.nome,
+            fornecedor_nome=fornecedor.nome_fantasia,
             quantidade=item.quantidade,
             custo_unitario=item.custo_unitario,
             custo_total=item.custo_total,

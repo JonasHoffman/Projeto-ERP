@@ -186,7 +186,7 @@ def receber_nfe(request):
             print("\n##### ERRO AO PROCESSAR XML #####")
             print(str(e))
             request.session.pop('xml_temp', None)
-            return render(request, 'recebimento/erro_buscar_nfe', {
+            return render(request, 'recebimento/erro_buscar_nfe.html', {
                 'erro': str(e)
             })
 

@@ -1,0 +1,78 @@
+{% extends "templates/base.html" %}
+{% load static %}
+
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pedidos de Compra</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 10px; }
+        tr:hover { background: #eee; cursor: pointer; }
+        .btn { padding: 6px 12px; cursor: pointer; }
+    </style>
+</head>
+
+<body>
+
+<h2>Pedidos de Compra Abertos</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nº Pedido</th>
+            <th>Fornecedor</th>
+            <th>Data</th>
+            <th>Ação</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for p in pedidos %}
+        <tr class="tr-compras-aberto">
+            <td>{{ p.numero }}</td>
+            <td>{{ p.fornecedor.nome }}</td>
+            <td>{{ p.data|date:"d/m/Y" }}</td>
+
+            <td>
+                <button class="btn"
+                        onclick="selecionarPedido('{{ p.numero }}','{{ p.fornecedor.nome }}')">
+                    Selecionar
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<script>
+function selecionarPedido(numero, fornecedor) {
+
+    // manda o pedido de volta para a tela da NF (na outra aba)
+    if (window.opener && !window.opener.closed) {
+
+        // envia o número para o input
+        window.opener.document.querySelector("#numero_pedido").value = numero;
+
+        // preenche a área abaixo (area-lote)
+        window.opener.document.querySelector(".area-compras").innerHTML =
+            `<div class="pedido-card" 
+                  style="padding:15px; border:1px solid #ccc; border-radius:10px; margin-bottom:10px;">
+                <h3>Pedido Selecionado</h3>
+                <p><strong>Número:</strong> ${numero}</p>
+                <p><strong>Fornecedor:</strong> ${fornecedor}</p>
+            </div>`;
+    }
+
+    // fecha a aba da lupa
+    window.close();
+}
+</script>
+
+</body>
+</html>
+{% endblock content %}

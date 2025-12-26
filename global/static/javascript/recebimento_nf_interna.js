@@ -4,11 +4,11 @@ let itemSelecionadoIndex = null;   // <= AGORA USAMOS ID DO ITEM
 const inputDoLoteBD = document.querySelector('[name="lote"]');
 const inputNrEmbalagemBD = document.querySelector('[name="nr_embalagem"]');
 const inputQtdPorCaixaBD = document.querySelector('[name="quantidade_por_caixa"]');
-const content2 = document.querySelector('.content-footer-header2');
+const content2 = document.querySelector('.content-footer-header2-base3');
 const content3 = document.querySelector('.content3');
 const areaLote = document.querySelector('.area-lote');
 const areaform = document.querySelector('.form-recebimento-interno')
-
+console.log('areaLote:', areaLote);
 
 // ===============================
 //  INPUT: QUANTIDADE DE CAIXA
@@ -38,11 +38,23 @@ function nadaSelecionado() {
 }
 
 function preencheQuantidade(quantidade, item, index) {
-    if (areaLote) areaLote.innerText = '';
 
-    inputNrEmbalagemBD.value = quantidade;
     itemSelecionado = item;
-    itemSelecionadoIndex = index;     // <= SALVA ID DO ITEM
+    itemSelecionadoIndex = index;
+
+    const itemSalvo = buscarItemSalvo(index);
+
+
+    resetarCamposDeCalculo();
+    
+    if (itemSalvo) {
+        carregarDadosSalvos(index);
+        return;
+    }
+
+    // comportamento padrão (item novo)
+    areaLote.innerHTML = '';
+    inputNrEmbalagemBD.value = quantidade;
 }
 
 function checainputLote() {
@@ -247,29 +259,44 @@ function enviarParaDjango() {
     console.log('Pedido (numero):', pedidoNumero);
     console.log('Dados enviados:', dados);
 
-    fetch(`/estoque/recebimento_nf/${campoNF}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken')
-        },
-        body: JSON.stringify({
-            itens: dados,
-            pedido_numero: pedidoNumero  // <-- NOME CORRETO
-        })
+ fetch(`/estoque/recebimento_nf_interna/${campoNF}`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify({
+        itens: dados,
+        pedido_numero: pedidoNumero
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Resposta do Django:', data);
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error('Erro HTTP: ' + response.status);
+    }
+    return response.json();
+})
+.then(data => {
 
-        if (data.erro) {
-            alert("ERRO: " + data.erro);
-            return;
-        }
+    if (data.erro) {
+        alert("ERRO: " + data.erro);
+        return;
+    }
 
-        alert('Dados salvos com sucesso!');
-    })
-    .catch(err => console.error('Erro no fetch:', err));
+    // ✅ LIMPA A SESSÃO
+    sessionStorage.removeItem('itensSalvos');
+
+    // limpa visual
+    areaLote.innerHTML = '';
+    document.querySelector("#enviar-form").style.display = 'none';
+
+    alert('Dados salvos com sucesso!');
+    window.location.href = '/financeiro/conta/pagamento/'
+})
+.catch(err => {
+    console.error('Erro no fetch:', err);
+    alert('Erro ao gravar os dados. Verifique o console.');
+});
 }
 
 
@@ -291,5 +318,77 @@ function getCookie(name) {
 
 // ---------- ABRIR LISTA DE PEDIDOS ----------
 function abrirListaPedidos() {
-    window.open("/estoque/pedidos-abertos/", "_blank");
+    window.open("/compras/compras/selecionar", "_blank");
+}
+
+function buscarItemSalvo(itemId) {
+    const itensSalvos = JSON.parse(sessionStorage.getItem('itensSalvos')) || [];
+    return itensSalvos.find(obj => obj.id_item_nf === itemId);
+}
+
+function carregarDadosSalvos(itemId) {
+
+    const item = buscarItemSalvo(itemId);
+    if (!item) return; // ainda não foi salvo
+
+    // limpa área de lotes
+    areaLote.innerHTML = '';
+
+    // seleciona item atual
+    itemSelecionadoIndex = item.id_item_nf;
+    itemSelecionado = item.nome_produto;
+
+    // depósito
+    document.querySelector('.select-deposito').value = item.deposito;
+
+    // quantidade total (soma das embalagens)
+    const total = item.nr_embalagem.reduce(
+        (acc, e) => acc + Number(e.qtdEmbalagem),
+        0
+    );
+
+    inputNrEmbalagemBD.value = total;
+
+    // cria containers
+    const containerLote = document.createElement('div');
+    const containerEmbalagem = document.createElement('div');
+
+    containerLote.classList.add('container-lote');
+    containerEmbalagem.classList.add('container-embalagem');
+
+    areaLote.appendChild(containerLote);
+    areaLote.appendChild(containerEmbalagem);
+
+    // recria linhas exatamente como estavam
+    item.lote.forEach((l, i) => {
+
+        const divLote = document.createElement('div');
+        divLote.classList.add('div-lote');
+
+        const inputLote = document.createElement('input');
+        inputLote.classList.add('input-lote');
+        inputLote.value = l.lote;
+
+        divLote.appendChild(document.createTextNode('Lotes - '));
+        divLote.appendChild(inputLote);
+
+        containerLote.appendChild(divLote);
+
+        const divEmb = document.createElement('div');
+        divEmb.classList.add('div-embalagem');
+
+        const inputEmb = document.createElement('input');
+        inputEmb.classList.add('input-embalagem');
+        inputEmb.value = item.nr_embalagem[i].qtdEmbalagem;
+
+        divEmb.appendChild(document.createTextNode('Quantidade - '));
+        divEmb.appendChild(inputEmb);
+
+        containerEmbalagem.appendChild(divEmb);
+    });
+}
+
+function resetarCamposDeCalculo() {
+    inputQtdDeCaixa.value = '';
+    inputQtdPorCaixaBD.value = '';
 }

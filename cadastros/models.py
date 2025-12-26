@@ -425,7 +425,7 @@ class ProdutoBase(models.Model):
     criado_em = models.DateTimeField(auto_now_add=True,null=True)
     atualizado_em = models.DateTimeField(auto_now=True,null=True)
     def __str__(self):
-        return self.codigo
+        return f"{self.codigo} - {self.nome}"
     
 class Banco(models.Model):
     codigo = models.CharField(max_length=10, unique=True)

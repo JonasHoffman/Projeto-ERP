@@ -33,8 +33,8 @@
         type="text"
         id="numero_pedido"
         name="numero_pedido"
-        value="{% if pedido_encontrado %}{{ pedido_encontrado.id }}{% endif %}"
-        placeholder="{% if pedido_encontrado %}{{ pedido_encontrado.numero }}{% else %}Informe o pedido{% endif %}"
+        value="{% if pedido_encontrado %}{{ pedido_encontrado.numero }}{% endif %}"
+        placeholder="Informe o pedido"
         readonly
     >
 
@@ -75,19 +75,19 @@
 
     <div class="gravar_recebimento_interno"><!-- ÁREA ONDE A LISTA DE PEDIDOS SERÁ CARREGADA -->
         <div class="area-compras"></div>
-        <div class="area-lote"></div>
+        
 
         <button id="salvar" type="button">Salvar</button>
         <button id="enviar-form" type="submit" style="display:none">Gravar na base</button>
 
-        <script src="{% static "javascript/recebimento_nf_interna.js" %}"></script>
+        <script src="{% static 'javascript/recebimento_nf_interna.js' %}" defer></script>
 
 
         <!-- JS LUPA -->
         <script>
         function abrirListaPedidos() {
             // ABRE A LISTA DE PEDIDOS EM NOVA ABA
-            window.open("/estoque/pedidos-abertos/", "_blank");
+            window.open("/recebimento/compras_em_aberto/", "_blank");
         }
         </script>
     </div>

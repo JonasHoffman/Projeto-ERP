@@ -4,6 +4,7 @@ from cadastros.models import ProdutoBase
 
 
 
+
 class UploadNFeForm(forms.Form):
     xml_file = forms.FileField(label='Envie o arquivo XML')
 
@@ -33,5 +34,12 @@ class Relacionar_produto_FornecedorForm(forms.Form):
 
 class recebimento_em_estoqueForm(forms.Form):
     lote = forms.CharField(max_length=50)
-    nr_embalagem = forms.CharField(max_length=50)
+    nr_embalagem = forms.CharField(
+        max_length=50,
+        widget=forms.TextInput(attrs={
+            'readonly': 'readonly'
+        })
+    )
     quantidade_por_caixa = forms.CharField(max_length=50)
+
+

@@ -1,0 +1,11 @@
+{% extends "templates/base_2.html" %}
+{% block content %}
+<h2>Pedido não encontrado para a NF {{ numero_nf }}</h2>
+<p>Por favor, informe manualmente o número do pedido:</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Enviar</button>
+</form>
+{% endblock %}

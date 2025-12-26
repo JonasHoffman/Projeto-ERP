@@ -10,5 +10,5 @@ urlpatterns = [
  
     path('buscar_nf_interna/', views.buscar_nf_interna, name='buscar_nf_interna'),
     path('recebimento_nf_interna/<str:numero_nf>', views.recebimento_nf_interna, name='recebimento_nf_interna'),
-
+    
 ]

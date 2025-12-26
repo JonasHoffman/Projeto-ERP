@@ -1,0 +1,37 @@
+{% extends "templates/base_2.html" %}
+{% block content %}
+
+<h2>Pedidos de Compra</h2>
+
+<a href="{% url 'compras:compras_criar_pedido' %}" class="btn btn-primary">Novo Pedido</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Número</th>
+            <th>Fornecedor</th>
+            <th>Valor Total</th>
+            <th>Recebido</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in pedidos %}
+        <tr>
+            <td>{{ p.numero }}</td>
+            <td>{{ p.fornecedor }}</td>
+            <td>R$ {{ p.valor_total }}</td>
+            <td>R$ {{ p.valor_recebido }}</td>
+            <td>{{ p.status }}</td>
+            <td>
+                <a href="{% url 'compras:compras_detalhe_pedido' p.id %}" class="btn btn-sm btn-info">Abrir</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">Nenhum pedido encontrado.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
